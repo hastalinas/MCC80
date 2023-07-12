@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics.Metrics;
+using System.Runtime.InteropServices;
 
 namespace DatabaseConnectivity;
 
@@ -17,8 +18,8 @@ public class Program
     private static SqlConnection _connection;
     public static void Main(string[] args)
     {
-        Menu.MenuUtama();
-        Console.Write("Input : ");
+        MenuUtama();
+        Console.Write("Masukkan Pilihan : ");
         string choice = Console.ReadLine();
         Console.Clear();
 
@@ -26,38 +27,39 @@ public class Program
         {
             case "1":
                 Console.WriteLine("=== Menu Tabel Region ===");
-                Menu.MenuCrud();
-                Console.Write("input : ");
+                MenuReg();
+                Console.Write("Input : ");
                 string input1 = Console.ReadLine();
-                Regions.InsertRegion(input1, _connectionString);
                 break;
             case "2":
                 Console.WriteLine("=== Menu Tabel Country ===");
-                Menu.MenuCrud();
+                //MenuCount();
                 Console.Write("Input: ");
                 string input2 = Console.ReadLine();
                 //Country.InsertCountry(input2, _connectionString);
                 break;
             case "3":
                 Console.WriteLine("=== Menu Tabel Location ===");
-                Menu.MenuCrud();
+                //MenuCrud();
                 //Location
                 break;
             case "4":
                 Console.WriteLine("=== Menu Tabel Departement ===");
-                Menu.MenuCrud();
+                //MenuCrud();
                 break;
             case "5":
                 Console.WriteLine("=== Menu Tabel Employee ===");
-                Menu.MenuCrud();
+                //MenuCrud();
                 break;
             case "6":
                 Console.WriteLine("=== Menu Tabel Job ===");
-                Menu.MenuCrud();
+                MenuJob();
+                Console.Write("Input : ");
+                string input6 = Console.ReadLine();
                 break;
             case "7":
                 Console.WriteLine("=== Menu Tabel History ===");
-                Menu.MenuCrud();
+                //MenuCrud();
                 break;
             case "8":
                 Console.WriteLine("Keluar dari program");
@@ -95,10 +97,7 @@ public class Program
                     Console.WriteLine("Error connecting to databasse");
                 }*/
     }
-}
 
-public class Menu
-{
     public static void MenuUtama()
     {
         Console.WriteLine("SHERINA ERIA HASTALINA");
@@ -113,20 +112,63 @@ public class Menu
         Console.WriteLine("===============================");
     }
 
-    public static void MenuCrud()
+
+    //===========Region========================
+    //GET ALL REGION
+    public static void MenuReg()
     {
         Console.WriteLine("1. Create");
         Console.WriteLine("2. Update");
         Console.WriteLine("3. Delete");
         Console.WriteLine("4. Get By Id");
         Console.WriteLine("5. Get All");
-    }
-}
+        Console.WriteLine();
+        Console.Write("Masukkan Pilihan : ");
+        int pilihMenu = Int32.Parse(Console.ReadLine());
 
-public class Regions
-{
-    //GET ALL
-    public static void GetRegions(string _connectionString)
+        switch (pilihMenu)
+        {
+            case 1:
+                Console.WriteLine("1. Create Region");
+                Console.Clear();
+                TambahRegion();
+                MenuReg();
+                break;
+            case 2:
+                Console.WriteLine("2. Update Region");
+                Console.Clear();
+                UbahRegion();
+                MenuReg();
+                break;
+            case 3:
+                Console.WriteLine("3. Hapus Region");
+                Console.Clear();
+                HapusRegion();
+                MenuReg();
+                break;
+            case 4:
+                Console.WriteLine("4. Search By Region ID");
+                Console.Clear();
+                CariIdReg();
+                MenuReg();
+                break;
+            case 5:
+                Console.WriteLine("5. Get All Regions");
+                GetRegions();
+                MenuReg();
+                break;
+            case 6:
+                Console.WriteLine("Kembali Ke Menu");
+                MenuUtama();
+                break;
+            default:
+                Console.WriteLine("Tidak ada pilihan");
+                MenuReg();
+                break;
+        }
+    }
+
+    public static void GetRegions()
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -163,7 +205,7 @@ public class Regions
     }
 
     // INSERT REGION
-    public static void InsertRegion(string name, string _connectionString)
+    public static void InsertRegion(string name)
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -202,9 +244,16 @@ public class Regions
         }
     }
 
+    public static void TambahRegion()
+    {
+        Console.Write("Tambah Nama Region: ");
+        string inputName = Console.ReadLine();
+        InsertRegion(inputName);
+    }
+
 
     // UPDATE REGION
-    public static void UpdateRegion(int id, string name, string _connectionString)
+    public static void UpdateRegion(int id, string name)
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -215,6 +264,7 @@ public class Regions
         //Set paramaeter value
         sqlCommand.Parameters.AddWithValue("@Id", id);
         sqlCommand.Parameters.AddWithValue("Name", name);
+
         try
         {
             _connection.Open();
@@ -232,11 +282,19 @@ public class Regions
         {
             Console.WriteLine("Error: " + ex.Message);
         }
+    }
 
+    public static void UbahRegion()
+    {
+        Console.Write("Masukkan ID yang ingin diganti: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        Console.Write("Ubah Region Name: ");
+        string inputName = Console.ReadLine();
+        UpdateRegion(inputId, inputName);
     }
 
     // DELETE REGION
-    public static void DeleteRegions(int id, string _connectionString)
+    public static void DeleteRegions(int id)
     {
         var _connection = new SqlConnection(_connectionString);
         SqlCommand sqlCommand = new SqlCommand();
@@ -274,8 +332,15 @@ public class Regions
         }
     }
 
+    public static void HapusRegion()
+    {
+        Console.Write("Hapus Region Id: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        DeleteRegions(inputId);
+    }
+
     // GET BY ID REGION
-    public static void GetById(int id, string _connectionString)
+    public static void GetByIdReg(int id)
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -286,7 +351,6 @@ public class Regions
 
         try
         {
-
             _connection.Open();
             SqlDataReader reader = sqlCommand.ExecuteReader();
 
@@ -313,13 +377,17 @@ public class Regions
         }
     }
 
-}
+    public static void CariIdReg()
+    {
+        Console.Write("Cari region Id: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        GetByIdReg(inputId);
+    }
 
 
-public class Country
-{
+    //===========Countries========================
     // Get all countries
-    public static void GetCountry(string _connectionString)
+    public static void GetCountry()
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -356,7 +424,7 @@ public class Country
     }
 
     // Insert Country
-    public static void InsertCountry(string id, string name, int region_id, string _connectionString)
+    public static void InsertCountry(string id, string name, int region_id)
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -407,12 +475,9 @@ public class Country
         }
 
     }
-}
 
-public class Location
-{
     // Get all locations
-    public static void GetLocation(string _connectionString)
+    public static void GetLocation()
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -448,12 +513,8 @@ public class Location
         }
     }
 
-}
-
-public class Departemen
-{
     // Get all departement
-    public static void GetDepartemen(string _connectionString)
+    public static void GetDepartemen()
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -488,12 +549,9 @@ public class Departemen
             Console.WriteLine("Error connecting to database.");
         }
     }
-}
 
-public class Employee
-{
     // Get all employee
-    public static void GetEmployee(string _connectionString)
+    public static void GetEmployee()
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -529,12 +587,61 @@ public class Employee
         }
     }
 
-}
+    //===========Jobs========================
+    public static void MenuJob()
+    {
+        Console.WriteLine("1. Create");
+        Console.WriteLine("2. Update");
+        Console.WriteLine("3. Delete");
+        Console.WriteLine("4. Get By Id");
+        Console.WriteLine("5. Get All");
+        Console.WriteLine();
+        Console.Write("Masukkan Pilihan : ");
+        int pilihMenu = Int32.Parse(Console.ReadLine());
 
-public class Job
-{
-    // Get all countries
-    public static void GetJob(string _connectionString)
+        switch (pilihMenu)
+        {
+            case 1:
+                Console.WriteLine("1. Create Jobs");
+                Console.Clear();
+                TambahJob();
+                MenuJob();
+                break;
+            case 2:
+                Console.WriteLine("2. Update Jobs");
+                Console.Clear();
+                UbahJob();
+                MenuJob();
+                break;
+            case 3:
+                Console.WriteLine("3. Hapus Jobs");
+                Console.Clear();
+                HapusJob();
+                MenuJob();
+                break;
+            case 4:
+                Console.WriteLine("4. Search By Jobs ID");
+                Console.Clear();
+                CariIdJob();
+                MenuReg();
+                break;
+            case 5:
+                Console.WriteLine("5. Get All Jobs");
+                GetJob();
+                MenuReg();
+                break;
+            case 6:
+                Console.WriteLine("Kembali Ke Menu");
+                MenuUtama();
+                break;
+            default:
+                Console.WriteLine("Tidak ada pilihan");
+                MenuReg();
+                break;
+        }
+    }
+    // Get all jobs
+    public static void GetJob()
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -551,8 +658,10 @@ public class Job
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine("Id: " + reader.GetInt32(0));
-                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Id: " + reader.GetString(0));
+                    Console.WriteLine("Title: " + reader.GetString(1));
+                    Console.WriteLine("Minimal Salary: " + reader.GetInt32(2));
+                    Console.WriteLine("Maximal Salary: " + reader.GetInt32(3));
                     Console.WriteLine();
                 }
             }
@@ -570,12 +679,258 @@ public class Job
         }
     }
 
-}
+    // INSERT JOB
+    public static void InsertJob(string id, string title, int min_salary, int max_salary)
+    {
+        var _connection = new SqlConnection(_connectionString);
 
-public class History
-{
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "INSERT INTO jobs (id, title, min_salary, max_salary) VALUES (@id, @title, @min_salary, @max_salary)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.VarChar;
+            pId.Value = title;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pTitle = new SqlParameter();
+            pTitle.ParameterName = "@title";
+            pTitle.SqlDbType = SqlDbType.VarChar;
+            pTitle.Value = title;
+            sqlCommand.Parameters.Add(pTitle);
+
+            SqlParameter pMinSalary = new SqlParameter();
+            pMinSalary.ParameterName = "@min_salary";
+            pMinSalary.SqlDbType = SqlDbType.Int;
+            pMinSalary.Value = min_salary;
+            sqlCommand.Parameters.Add(pMinSalary);
+
+            SqlParameter pMaxSalary = new SqlParameter();
+            pMaxSalary.ParameterName = "@max_salary";
+            pMaxSalary.SqlDbType = SqlDbType.VarChar;
+            pMaxSalary.Value = max_salary;
+            sqlCommand.Parameters.Add(pMaxSalary);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Insert succes");
+            }
+            else
+            {
+                Console.WriteLine("Insert failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database");
+        }
+    }
+
+    public static void TambahJob()
+    {
+        
+        Console.Write("Tambah ID: ");
+        string inId = Console.ReadLine();
+        Console.Write("Tambah Title: ");
+        string inTitle = Console.ReadLine();
+        Console.Write("Tambah Min Salary: ");
+        int inMinSal = Int32.Parse(Console.ReadLine());
+        Console.Write("Tambah Max Salary: ");
+        int inMaxSal = Int32.Parse(Console.ReadLine());
+        InsertJob(inId, inTitle, inMinSal, inMaxSal);
+
+    }
+
+
+    // UPDATE JOB
+    public static void UpdateJob(int id, string name)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Update jobs set name = @Name where id = @Id";
+
+        //Set paramaeter value
+        sqlCommand.Parameters.AddWithValue("@Id", id);
+        sqlCommand.Parameters.AddWithValue("Name", name);
+        try
+        {
+            _connection.Open();
+            int rowAffected = sqlCommand.ExecuteNonQuery();
+            if (rowAffected > 0)
+            {
+                Console.WriteLine("Region updated succesfully.");
+            }
+            else
+            {
+                Console.WriteLine("No region found or no change made.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+
+    }
+
+    public static void UbahJob()
+    {
+        Console.Write("Masukkan ID yang ingin diganti: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        Console.Write("Ubah Region Name: ");
+        string inputName = Console.ReadLine();
+        UpdateJob(inputId, inputName);
+
+
+    }
+
+    // DELETE Job
+    public static void DeleteJob(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Delete from jobs where id = (@Id)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@Id";
+            pId.SqlDbType = SqlDbType.VarChar;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete succes");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error! " + ex.Message);
+        }
+    }
+
+    public static void HapusJob()
+    {
+        Console.Write("Hapus Region Id: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        DeleteRegions(inputId);
+    }
+
+    public static void GetByIdJob(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT name FROM jobs WHERE id = @Id";
+        sqlCommand.Parameters.AddWithValue("@Id", id);
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    //Console.WriteLine("ID: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(0));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No job found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+    public static void CariIdJob()
+    {
+        Console.Write("Cari region Id: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        GetByIdJob(inputId);
+    }
+
+    //==============================
+    // GET BY ID Job
+    public static void GetByIdRegion(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT name FROM jobs WHERE id = @Id";
+        sqlCommand.Parameters.AddWithValue("@Id", id);
+
+        try
+        {
+
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    //Console.WriteLine("ID: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(0));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No job found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+
+
+    //========================================================================
     // Get all histories
-    public static void GetHistories(string _connectionString)
+    public static void GetHistories()
     {
         var _connection = new SqlConnection(_connectionString);
 
