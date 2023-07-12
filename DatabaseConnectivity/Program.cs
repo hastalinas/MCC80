@@ -28,13 +28,11 @@ public class Program
             case "1":
                 Console.WriteLine("=== Menu Tabel Region ===");
                 MenuReg();
-                Console.Write("Input : ");
                 string input1 = Console.ReadLine();
                 break;
             case "2":
                 Console.WriteLine("=== Menu Tabel Country ===");
-                //MenuCount();
-                Console.Write("Input: ");
+                MenuCoun();
                 string input2 = Console.ReadLine();
                 //Country.InsertCountry(input2, _connectionString);
                 break;
@@ -117,54 +115,53 @@ public class Program
     //GET ALL REGION
     public static void MenuReg()
     {
-        Console.WriteLine("1. Create");
-        Console.WriteLine("2. Update");
-        Console.WriteLine("3. Delete");
-        Console.WriteLine("4. Get By Id");
-        Console.WriteLine("5. Get All");
-        Console.WriteLine();
-        Console.Write("Masukkan Pilihan : ");
-        int pilihMenu = Int32.Parse(Console.ReadLine());
-
-        switch (pilihMenu)
+        bool exit = false;
+        while (!exit)
         {
-            case 1:
-                Console.WriteLine("1. Create Region");
-                Console.Clear();
-                TambahRegion();
-                MenuReg();
-                break;
-            case 2:
-                Console.WriteLine("2. Update Region");
-                Console.Clear();
-                UbahRegion();
-                MenuReg();
-                break;
-            case 3:
-                Console.WriteLine("3. Hapus Region");
-                Console.Clear();
-                HapusRegion();
-                MenuReg();
-                break;
-            case 4:
-                Console.WriteLine("4. Search By Region ID");
-                Console.Clear();
-                CariIdReg();
-                MenuReg();
-                break;
-            case 5:
-                Console.WriteLine("5. Get All Regions");
-                GetRegions();
-                MenuReg();
-                break;
-            case 6:
-                Console.WriteLine("Kembali Ke Menu");
-                MenuUtama();
-                break;
-            default:
-                Console.WriteLine("Tidak ada pilihan");
-                MenuReg();
-                break;
+            Console.WriteLine("1. Create");
+            Console.WriteLine("2. Update");
+            Console.WriteLine("3. Delete");
+            Console.WriteLine("4. Get By Id");
+            Console.WriteLine("5. Get All");
+            Console.WriteLine("6. Back");
+            Console.WriteLine();
+            Console.Write("Masukkan Pilihan : ");
+            int pilihMenu = Int32.Parse(Console.ReadLine());
+
+            switch (pilihMenu)
+            {
+                case 1:
+                    Console.Clear();
+                    TambahRegion();
+                    MenuReg();
+                    break;
+                case 2:
+                    Console.Clear();
+                    UbahRegion();
+                    MenuReg();
+                    break;
+                case 3:
+                    Console.Clear();
+                    HapusRegion();
+                    MenuReg();
+                    break;
+                case 4:
+                    Console.Clear();
+                    CariIdReg();
+                    MenuReg();
+                    break;
+                case 5:
+                    GetRegions();
+                    MenuReg();
+                    break;
+                case 6:
+                    exit = true;
+                    break;
+                default:
+                    Console.WriteLine("Tidak ada pilihan");
+                    MenuReg();
+                    break;
+            }
         }
     }
 
@@ -386,6 +383,57 @@ public class Program
 
 
     //===========Countries========================
+    public static void MenuCoun()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            Console.WriteLine("1. Create");
+            Console.WriteLine("2. Update");
+            Console.WriteLine("3. Delete");
+            Console.WriteLine("4. Get By Id");
+            Console.WriteLine("5. Get All");
+            Console.WriteLine("6. Back");
+            Console.WriteLine();
+            Console.Write("Masukkan Pilihan : ");
+            int pilihMenu = Int32.Parse(Console.ReadLine());
+
+            switch (pilihMenu)
+            {
+                case 1:
+                    Console.Clear();
+                    TambahCoun();
+                    MenuCoun();
+                    break;
+                case 2:
+                    Console.Clear();
+                    //UbahCoun();
+                    MenuCoun();
+                    break;
+                case 3:
+                    Console.Clear();
+                    HapusRegion();
+                    MenuCoun();
+                    break;
+                case 4:
+                    Console.Clear();
+                    CariIdReg();
+                    MenuCoun();
+                    break;
+                case 5:
+                    GetRegions();
+                    MenuCoun();
+                    break;
+                case 6:
+                    exit = true;
+                    break;
+                default:
+                    Console.WriteLine("Tidak ada pilihan");
+                    MenuCoun();
+                    break;
+            }
+        }
+    }
     // Get all countries
     public static void GetCountry()
     {
@@ -411,7 +459,7 @@ public class Program
             }
             else
             {
-                Console.WriteLine("No regions found.");
+                Console.WriteLine("No country found.");
             }
 
             reader.Close();
@@ -474,6 +522,17 @@ public class Program
             Console.WriteLine("Error connecting to database");
         }
 
+    }
+
+    public static void TambahCoun()
+    {
+        Console.WriteLine("Input ID Country: ");
+        string inputID = Console.ReadLine();
+        Console.WriteLine("Input Country: ");
+        string inputName = Console.ReadLine();
+        Console.WriteLine("Input Country: ");
+        int inputRegId = Int32.Parse(Console.ReadLine());
+        InsertCountry(inputID, inputName, inputRegId);
     }
 
     // Get all locations
@@ -595,6 +654,7 @@ public class Program
         Console.WriteLine("3. Delete");
         Console.WriteLine("4. Get By Id");
         Console.WriteLine("5. Get All");
+        Console.WriteLine("6. Back");
         Console.WriteLine();
         Console.Write("Masukkan Pilihan : ");
         int pilihMenu = Int32.Parse(Console.ReadLine());
@@ -602,38 +662,32 @@ public class Program
         switch (pilihMenu)
         {
             case 1:
-                Console.WriteLine("1. Create Jobs");
                 Console.Clear();
                 TambahJob();
                 MenuJob();
                 break;
             case 2:
-                Console.WriteLine("2. Update Jobs");
                 Console.Clear();
                 UbahJob();
                 MenuJob();
                 break;
             case 3:
-                Console.WriteLine("3. Hapus Jobs");
                 Console.Clear();
                 HapusJob();
                 MenuJob();
                 break;
             case 4:
-                Console.WriteLine("4. Search By Jobs ID");
                 Console.Clear();
                 CariIdJob();
                 MenuReg();
                 break;
             case 5:
-                Console.WriteLine("5. Get All Jobs");
                 GetJob();
                 MenuReg();
                 break;
             case 6:
-                Console.WriteLine("Kembali Ke Menu");
-                MenuUtama();
-                break;
+                Console.Clear();
+                break; 
             default:
                 Console.WriteLine("Tidak ada pilihan");
                 MenuReg();
@@ -686,7 +740,8 @@ public class Program
 
         SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "INSERT INTO jobs (id, title, min_salary, max_salary) VALUES (@id, @title, @min_salary, @max_salary)";
+        sqlCommand.CommandText = "INSERT INTO jobs(id, title, min_salary, max_salary) " +
+            "VALUES (@id, @title, @min_salary, @max_salary)";
 
         _connection.Open();
         SqlTransaction transaction = _connection.BeginTransaction();
@@ -697,7 +752,7 @@ public class Program
             SqlParameter pId = new SqlParameter();
             pId.ParameterName = "@id";
             pId.SqlDbType = SqlDbType.VarChar;
-            pId.Value = title;
+            pId.Value = id;
             sqlCommand.Parameters.Add(pId);
 
             SqlParameter pTitle = new SqlParameter();
@@ -737,45 +792,32 @@ public class Program
         }
     }
 
-    public static void TambahJob()
-    {
-        
-        Console.Write("Tambah ID: ");
-        string inId = Console.ReadLine();
-        Console.Write("Tambah Title: ");
-        string inTitle = Console.ReadLine();
-        Console.Write("Tambah Min Salary: ");
-        int inMinSal = Int32.Parse(Console.ReadLine());
-        Console.Write("Tambah Max Salary: ");
-        int inMaxSal = Int32.Parse(Console.ReadLine());
-        InsertJob(inId, inTitle, inMinSal, inMaxSal);
-
-    }
-
-
     // UPDATE JOB
-    public static void UpdateJob(int id, string name)
+    public static void UpdateJob(string id, string title, int min_salary, int max_salary)
     {
         var _connection = new SqlConnection(_connectionString);
 
         SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "Update jobs set name = @Name where id = @Id";
+        sqlCommand.CommandText = "update jobs set title = @title, min_salary = @min_salary, max_salary = @max_salary" +
+            " WHERE id = @idJob";
 
         //Set paramaeter value
-        sqlCommand.Parameters.AddWithValue("@Id", id);
-        sqlCommand.Parameters.AddWithValue("Name", name);
+        sqlCommand.Parameters.AddWithValue("@idJob", id);
+        sqlCommand.Parameters.AddWithValue("@title", title);
+        sqlCommand.Parameters.AddWithValue("@min_salary", min_salary);
+        sqlCommand.Parameters.AddWithValue("@max_salary", max_salary);
         try
         {
             _connection.Open();
             int rowAffected = sqlCommand.ExecuteNonQuery();
             if (rowAffected > 0)
             {
-                Console.WriteLine("Region updated succesfully.");
+                Console.WriteLine("Job updated succesfully.");
             }
             else
             {
-                Console.WriteLine("No region found or no change made.");
+                Console.WriteLine("No job found or no change made.");
             }
         }
         catch (Exception ex)
@@ -788,16 +830,19 @@ public class Program
     public static void UbahJob()
     {
         Console.Write("Masukkan ID yang ingin diganti: ");
-        int inputId = Int32.Parse(Console.ReadLine());
-        Console.Write("Ubah Region Name: ");
-        string inputName = Console.ReadLine();
-        UpdateJob(inputId, inputName);
-
+        string id = Console.ReadLine();
+        Console.Write("Ubah Title: ");
+        string title = Console.ReadLine();
+        Console.Write("Ubah Gaji Minimal : ");
+        int min_salary = Int32.Parse( Console.ReadLine());
+        Console.Write("Ubah Gaji Maksimal : ");
+        int max_salary = Int32.Parse(Console.ReadLine());
+        UpdateJob(id, title, min_salary, max_salary);
 
     }
 
     // DELETE Job
-    public static void DeleteJob(int id)
+    public static void DeleteJob(string id)
     {
         var _connection = new SqlConnection(_connectionString);
         SqlCommand sqlCommand = new SqlCommand();
@@ -837,9 +882,9 @@ public class Program
 
     public static void HapusJob()
     {
-        Console.Write("Hapus Region Id: ");
-        int inputId = Int32.Parse(Console.ReadLine());
-        DeleteRegions(inputId);
+        Console.Write("Hapus Job dengan ID: ");
+        string inputId = Console.ReadLine();
+        DeleteJob(inputId);
     }
 
     public static void GetByIdJob(int id)
@@ -886,7 +931,19 @@ public class Program
         GetByIdJob(inputId);
     }
 
-    //==============================
+    public static void TambahJob()
+    {
+        Console.Write("Tambah ID: ");
+        string inId = Console.ReadLine();
+        Console.Write("Tambah Title: ");
+        string inTitle = Console.ReadLine();
+        Console.Write("Tambah Min Salary: ");
+        int inMinSal = Int32.Parse(Console.ReadLine());
+        Console.Write("Tambah Max Salary: ");
+        int inMaxSal = Int32.Parse(Console.ReadLine());
+        InsertJob(inId, inTitle, inMinSal, inMaxSal);
+    }
+
     // GET BY ID Job
     public static void GetByIdRegion(int id)
     {
