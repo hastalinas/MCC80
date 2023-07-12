@@ -50,9 +50,9 @@ public class Program
                 break;
             case "5":
                 Console.WriteLine("=== Menu Tabel Employee ===");
-                //MenuEmp();
-                //Console.Write("Input : ");
-                //string input5 = Console.ReadLine();
+                MenuEmp();
+                Console.Write("Input : ");
+                string input5 = Console.ReadLine();
                 break;
             case "6":
                 Console.WriteLine("=== Menu Tabel Job ===");
@@ -704,6 +704,7 @@ public class Program
         }
     }
 
+    //
     public static void GetByIdLoc(int id)
     {
         var _connection = new SqlConnection(_connectionString);
@@ -752,6 +753,8 @@ public class Program
         int inputId = Int32.Parse(Console.ReadLine());
         GetByIdLoc(inputId);
     }
+
+    //
     public static void DeleteLoc(int id)
     {
         var _connection = new SqlConnection(_connectionString);
@@ -796,6 +799,8 @@ public class Program
         int inputId = Int32.Parse(Console.ReadLine());
         DeleteLoc(inputId);
     }
+
+    //
     public static void UpdateLoc(int id, string street_address, string postal_code, string city, string state_province,
         string country_id)
     {
@@ -855,7 +860,8 @@ public class Program
 
         UpdateLoc(inputId, instreet_address, inpostal_code,incity, instate_province,incountry_id);
     }
-
+    
+    //
     public static void InsertLoc(int id, string street_address, string postal_code, string city, string state_province,
         string country_id)
     {
@@ -944,6 +950,7 @@ public class Program
         string inputCoun = Console.ReadLine();
         InsertLoc(inputID, inputAddress, inputPos, inputCity, inputProv, inputCoun);
     }
+
     // Get all locations
     public static void GetLocation()
     {
@@ -989,7 +996,6 @@ public class Program
 
 
     //============Departement======================
-    // Get all departement
     public static void MenuDep()
     {
         bool exit = false;
@@ -1042,7 +1048,7 @@ public class Program
         }
     }
 
-    // Get all dep
+    // Get all departement
     public static void GetDepartemen()
     {
         var _connection = new SqlConnection(_connectionString);
@@ -1154,6 +1160,7 @@ public class Program
         InsertDep(inputID, inputDepName, inpuLocId, inputManID);
     }
 
+    //
     public static void GetByIdDep(string id)
     {
         var _connection = new SqlConnection(_connectionString);
@@ -1199,6 +1206,8 @@ public class Program
         string inputId = Console.ReadLine();
         GetByIdDep(inputId);
     }
+
+    //
     public static void DeleteDep(string id)
     {
         var _connection = new SqlConnection(_connectionString);
@@ -1244,6 +1253,7 @@ public class Program
         DeleteDep(inputId);
     }
 
+    //
     public static void UpdateDep(string id, string name, int location_id, int manager_id)
     {
         var _connection = new SqlConnection(_connectionString);
@@ -1291,6 +1301,54 @@ public class Program
 
 
     //============employee==========
+    public static void MenuEmp()
+    {
+        Console.WriteLine("1. Create");
+        Console.WriteLine("2. Update");
+        Console.WriteLine("3. Delete");
+        Console.WriteLine("4. Get By Id");
+        Console.WriteLine("5. Get All");
+        Console.WriteLine("6. Back");
+        Console.WriteLine();
+        Console.Write("Masukkan Pilihan : ");
+        int pilihMenu = Int32.Parse(Console.ReadLine());
+
+        switch (pilihMenu)
+        {
+            case 1:
+                Console.Clear();
+                TambahEmp();
+                MenuEmp();
+                break;
+            case 2:
+                Console.Clear();
+                UbahJob();
+                MenuEmp();
+                break;
+            case 3:
+                Console.Clear();
+                HapusJob();
+                MenuEmp();
+                break;
+            case 4:
+                Console.Clear();
+                CariIdJob();
+                MenuEmp();
+                break;
+            case 5:
+                GetEmployee();
+                MenuEmp();
+                break;
+            case 6:
+                Console.Clear();
+                break;
+            default:
+                Console.WriteLine("Tidak ada pilihan");
+                MenuJob();
+                break;
+        }
+    }
+
     // Get all employee
     public static void GetEmployee()
     {
@@ -1309,8 +1367,59 @@ public class Program
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine("Id: " + reader.GetInt32(0));
-                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Id          : " + reader.GetInt32(0));
+                    Console.WriteLine("First Name  : " + reader.GetString(1));
+                    //Console.WriteLine("Last Name   : " + reader.GetString(2));
+                    if (!reader.IsDBNull(2))
+                    {
+                        Console.WriteLine("Last Name   : " + reader.GetString(2));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Last Name     : NULL");
+                    }
+                    Console.WriteLine("Email       : " + reader.GetString(3));
+                    Console.WriteLine("Phone       : " + reader.GetString(4));
+                    Console.WriteLine("Hire Date   : " + reader.GetDateTime(5));
+
+                    if (!reader.IsDBNull(6))
+                    {
+                        Console.WriteLine("Salary      : " + reader.GetInt32(6));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Salary      : NULL");
+                    }
+
+                    if (!reader.IsDBNull(7))
+                    {
+                        Console.WriteLine("Commision   : " + reader.GetDecimal(7));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Commision   : NULL");
+                    }
+
+                    if (!reader.IsDBNull(8))
+                    {
+                        Console.WriteLine("Manager Id  : " + reader.GetInt32(8));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Manager Id  : NULL");
+                    }
+
+                    Console.WriteLine("Job Id      : " + reader.GetString(9));
+
+                    if (!reader.IsDBNull(10))
+                    {
+                        Console.WriteLine("Departement : " + reader.GetInt32(10));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Departement : NULL");
+                    }
+
                     Console.WriteLine();
                 }
             }
@@ -1322,11 +1431,84 @@ public class Program
             reader.Close();
             _connection.Close();
         }
-        catch
+        catch (Exception ex)
         {
-            Console.WriteLine("Error connecting to database.");
+            Console.WriteLine("Error connecting to database: " + ex.Message);
         }
     }
+
+
+    public static void InsertEmpl(string id, string title, int min_salary, int max_salary)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "INSERT INTO jobs(id, title, min_salary, max_salary) " +
+            "VALUES (@id, @title, @min_salary, @max_salary)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.VarChar;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pTitle = new SqlParameter();
+            pTitle.ParameterName = "@title";
+            pTitle.SqlDbType = SqlDbType.VarChar;
+            pTitle.Value = title;
+            sqlCommand.Parameters.Add(pTitle);
+
+            SqlParameter pMinSalary = new SqlParameter();
+            pMinSalary.ParameterName = "@min_salary";
+            pMinSalary.SqlDbType = SqlDbType.Int;
+            pMinSalary.Value = min_salary;
+            sqlCommand.Parameters.Add(pMinSalary);
+
+            SqlParameter pMaxSalary = new SqlParameter();
+            pMaxSalary.ParameterName = "@max_salary";
+            pMaxSalary.SqlDbType = SqlDbType.VarChar;
+            pMaxSalary.Value = max_salary;
+            sqlCommand.Parameters.Add(pMaxSalary);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Insert succes");
+            }
+            else
+            {
+                Console.WriteLine("Insert failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error connecting to database");
+        }
+    }
+
+    public static void TambahEmp()
+    {
+        Console.Write("Tambah ID: ");
+        string inId = Console.ReadLine();
+        Console.Write("Tambah Title: ");
+        string inTitle = Console.ReadLine();
+        Console.Write("Tambah Min Salary: ");
+        int inMinSal = Int32.Parse(Console.ReadLine());
+        Console.Write("Tambah Max Salary: ");
+        int inMaxSal = Int32.Parse(Console.ReadLine());
+        InsertJob(inId, inTitle, inMinSal, inMaxSal);
+    }
+
 
     //===========Jobs========================
     public static void MenuJob()
@@ -1722,8 +1904,6 @@ public class Program
         }
     }
 
-
-
     // Get all histories
     public static void GetHistories()
     {
@@ -1764,6 +1944,7 @@ public class Program
         }
     }
 
+    //insert histories
     public static void InsertHist(DateTime start_date, int employee_id, DateTime end_date, 
         int departement_id, string job_id)
     {
@@ -1844,6 +2025,7 @@ public class Program
         InsertHist(startDate, inEmpID, endDate, inputDepID, inJobID);
     }
 
+    //update histories
     public static void UpdateHis(DateTime start_date, int employee_id, DateTime end_date,
         int departement_id, string job_id)
     {
@@ -1925,6 +2107,7 @@ public class Program
         UpdateHis(startDate, inEmpID, endDate, inputDepID, inJobID);
     }
 
+    //delete histories
     public static void DeleteHis(int id)
     {
         var _connection = new SqlConnection(_connectionString);
@@ -1970,6 +2153,7 @@ public class Program
         DeleteHis(inputId);
     }
 
+    //cari id
     public static void GetByIdHis(int id)
     {
         var _connection = new SqlConnection(_connectionString);
