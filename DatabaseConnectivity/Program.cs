@@ -1629,7 +1629,7 @@ public class Program
     }
 
     // GET BY ID Job
-    public static void GetByIdRegion(int id)
+/*    public static void GetByIdRegion(int id)
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -1665,7 +1665,7 @@ public class Program
         {
             Console.WriteLine("Error!" + ex.Message);
         }
-    }
+    }*/
 
 
 
@@ -1694,17 +1694,17 @@ public class Program
                     break;
                 case 2:
                     Console.Clear();
-                    UbahLoc();
+                    UbahHis();
                     MenuLoc();
                     break;
                 case 3:
                     Console.Clear();
-                    HapusLoc();
+                    HapusHis();
                     MenuLoc();
                     break;
                 case 4:
                     Console.Clear();
-                    CariIdLoc();
+                    CariIdHis();
                     MenuLoc();
                     break;
                 case 5:
@@ -1844,8 +1844,178 @@ public class Program
         InsertHist(startDate, inEmpID, endDate, inputDepID, inJobID);
     }
 
+    public static void UpdateHis(DateTime start_date, int employee_id, DateTime end_date,
+        int departement_id, string job_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
 
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "update histories set start_date = @start_date, job_id = @job_id, " +
+            "departement_id = @departement_id" +
+            " WHERE employee_id = @employee_id";
 
+        //Set paramaeter value
+        sqlCommand.Parameters.AddWithValue("@start_date", start_date);
+        sqlCommand.Parameters.AddWithValue("@employee_id", employee_id);
+        sqlCommand.Parameters.AddWithValue("@end_date", end_date);
+        sqlCommand.Parameters.AddWithValue("@departement_id", departement_id);
+        sqlCommand.Parameters.AddWithValue("@job_id", job_id);
+        try
+        {
+            _connection.Open();
+            int rowAffected = sqlCommand.ExecuteNonQuery();
+            if (rowAffected > 0)
+            {
+                Console.WriteLine("Histories updated succesfully.");
+            }
+            else
+            {
+                Console.WriteLine("No histories found or no change made.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+
+    }
+
+    public static void UbahHis()
+    {
+        Console.Write("Input Employee ID: ");
+        int inEmpID = int.Parse(Console.ReadLine());
+
+        Console.Write("Input Start Date (YYYY-MM-DD): ");
+        string inStart = Console.ReadLine();
+        DateTime startDate;
+        if (DateTime.TryParse(inStart, out startDate))
+        {
+            // Valid DateTime value
+            Console.WriteLine("Start Date: " + startDate.ToString("yyyy-MM-dd"));
+        }
+        else
+        {
+            // Invalid DateTime value
+            Console.WriteLine("Invalid Start Date format. Please enter a valid date (YYYY-MM-DD).");
+            return;
+        }
+
+        Console.Write("Input End Date (YYYY-MM-DD): ");
+        string inEnd = Console.ReadLine();
+        DateTime endDate;
+        if (DateTime.TryParse(inEnd, out endDate))
+        {
+            // Valid DateTime value
+            Console.WriteLine("End Date: " + endDate.ToString("yyyy-MM-dd"));
+        }
+        else
+        {
+            // Invalid DateTime value
+            Console.WriteLine("Invalid End Date format. Please enter a valid date (YYYY-MM-DD).");
+            return;
+        }
+
+        Console.Write("Input Department ID: ");
+        int inputDepID = int.Parse(Console.ReadLine());
+
+        Console.Write("Input Job ID: ");
+        string inJobID = Console.ReadLine();
+
+        UpdateHis(startDate, inEmpID, endDate, inputDepID, inJobID);
+    }
+
+    public static void DeleteHis(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Delete from histories where employee_id = (@Id)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@Id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete succes");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error! " + ex.Message);
+        }
+    }
+
+    public static void HapusHis()
+    {
+        Console.Write("Hapus Histori dengan ID Employee: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        DeleteHis(inputId);
+    }
+
+    public static void GetByIdHis(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM histories WHERE employee_id = @Id";
+        sqlCommand.Parameters.AddWithValue("@Id", id);
+
+        try
+        {
+
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Start Date : " + reader.GetDateTime(0));
+                    Console.WriteLine("Employee ID: " + reader.GetInt32(1));
+                    Console.WriteLine("End Date   : " + reader.GetDateTime(2));
+                    Console.WriteLine("Job        : " + reader.GetInt32(3));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No job found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+    public static void CariIdHis()
+    {
+        Console.Write("Cari Histories Berdasarkan Employee Id: ");
+        int inputId =Int32.Parse(Console.ReadLine());
+        GetByIdHis(inputId);
+    }
 }
 
 
