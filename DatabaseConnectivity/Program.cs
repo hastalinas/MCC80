@@ -67,33 +67,6 @@ public class Program
                 break;
         }
 
-        //GetRegions();
-
-        //Insert Region dengan Singapura
-        //InsertRegion(name: "Singapura") ;
-
-        //Ubah Region dengan id 9 ke Bangkok
-        //int regionId = 9;
-        //string regionName = "Bangkok";
-        //UpdateRegion(regionId,regionName);
-
-        //Hapus id
-        //DeleteRegions(id: 10) ;
-        //GetById(1);
-
-
-        /*        _connection = new SqlConnection(_connectionString);
-
-                try
-                {
-                    _connection.Open();
-                    Console.WriteLine("Connection succesfull.");
-                    _connection.Close();
-                }
-                catch
-                {
-                    Console.WriteLine("Error connecting to databasse");
-                }*/
     }
 
     public static void MenuUtama()
@@ -103,7 +76,7 @@ public class Program
         Console.WriteLine("1. Region");
         Console.WriteLine("2. Country");
         Console.WriteLine("3. Location");
-        Console.WriteLine("4. Departement");
+        Console.WriteLine("4. Departement"); 
         Console.WriteLine("5. Employee");
         Console.WriteLine("6. Job");
         Console.WriteLine("7. History");
@@ -407,25 +380,25 @@ public class Program
                     break;
                 case 2:
                     Console.Clear();
-                    //UbahCoun();
+                    UbahCoun();
                     MenuCoun();
                     break;
                 case 3:
                     Console.Clear();
-                    HapusRegion();
+                    HapusCount();
                     MenuCoun();
                     break;
                 case 4:
                     Console.Clear();
-                    CariIdReg();
+                    CariIdCoun();
                     MenuCoun();
                     break;
                 case 5:
-                    GetRegions();
+                    GetCoun();
                     MenuCoun();
                     break;
                 case 6:
-                    exit = true;
+                    MenuUtama();
                     break;
                 default:
                     Console.WriteLine("Tidak ada pilihan");
@@ -435,25 +408,26 @@ public class Program
         }
     }
     // Get all countries
-    public static void GetCountry()
+    public static void GetCoun()
     {
         var _connection = new SqlConnection(_connectionString);
 
-        using SqlCommand sqlCommand = new SqlCommand();
+        SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
         sqlCommand.CommandText = "SELECT * FROM countries";
 
         try
         {
             _connection.Open();
-            SqlDataReader reader = sqlCommand.ExecuteReader();
+            using SqlDataReader reader = sqlCommand.ExecuteReader();
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Id: " + reader.GetString(0));
                     Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Region ID: " + reader.GetInt32(2));
                     Console.WriteLine();
                 }
             }
@@ -465,9 +439,9 @@ public class Program
             reader.Close();
             _connection.Close();
         }
-        catch
+        catch (Exception ex) 
         {
-            Console.WriteLine("Error connecting to database.");
+            Console.WriteLine("Error! "+ ex.Message);
         }
     }
 
@@ -526,15 +500,151 @@ public class Program
 
     public static void TambahCoun()
     {
-        Console.WriteLine("Input ID Country: ");
+        Console.Write("Input ID Country: ");
         string inputID = Console.ReadLine();
-        Console.WriteLine("Input Country: ");
+        Console.Write("Input Country: ");
         string inputName = Console.ReadLine();
-        Console.WriteLine("Input Country: ");
+        Console.Write("Input ID Region: ");
         int inputRegId = Int32.Parse(Console.ReadLine());
         InsertCountry(inputID, inputName, inputRegId);
     }
 
+    public static void UpdateCount(string id, string name, int region_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Update countries set name = @name, region_id = @region_id where id = @id";
+
+        //Set paramaeter value
+        sqlCommand.Parameters.AddWithValue("@id", id);
+        sqlCommand.Parameters.AddWithValue("@name", name);
+        sqlCommand.Parameters.AddWithValue("@region_id", region_id);
+
+        try
+        {
+            _connection.Open();
+            int rowAffected = sqlCommand.ExecuteNonQuery();
+            if (rowAffected > 0)
+            {
+                Console.WriteLine("Countries updated succesfully.");
+            }
+            else
+            {
+                Console.WriteLine("No countries found or no change made.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    public static void UbahCoun()
+    {
+        Console.Write("Masukkan ID yang ingin diganti: ");
+        string inputId = Console.ReadLine();
+        Console.Write("Ubah Country Name: ");
+        string inputCountri = Console.ReadLine();
+        Console.Write("Ubah Region ID: ");
+        int inputRegID = Int32.Parse(Console.ReadLine());
+        UpdateCount(inputId, inputCountri, inputRegID);
+    }
+
+    public static void DeleteCoun(string id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Delete from countries where id = @Id";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@Id";
+            pId.SqlDbType = SqlDbType.VarChar;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete succes");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error! " + ex.Message);
+        }
+    }
+
+    public static void HapusCount()
+    {
+        Console.Write("Hapus Country Id: ");
+        string inputId = Console.ReadLine();
+        DeleteCoun(inputId);
+    }
+
+    // GET BY ID REGION
+    public static void GetByIdCoun(string id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM countries WHERE id = @Id";
+        sqlCommand.Parameters.AddWithValue("@Id", id);
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("ID: " + reader.GetString(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("ID Region: " + reader.GetInt32(2));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No countries found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+    public static void CariIdCoun()
+    {
+        Console.Write("Cari Id Country: ");
+        string inputId = Console.ReadLine();
+        GetByIdCoun(inputId);
+    }
+
+
+    //============Location======================
     // Get all locations
     public static void GetLocation()
     {
@@ -679,18 +789,18 @@ public class Program
             case 4:
                 Console.Clear();
                 CariIdJob();
-                MenuReg();
+                MenuJob();
                 break;
             case 5:
                 GetJob();
-                MenuReg();
+                MenuJob();
                 break;
             case 6:
                 Console.Clear();
                 break; 
             default:
                 Console.WriteLine("Tidak ada pilihan");
-                MenuReg();
+                MenuJob();
                 break;
         }
     }
@@ -887,13 +997,13 @@ public class Program
         DeleteJob(inputId);
     }
 
-    public static void GetByIdJob(int id)
+    public static void GetByIdJob(string id)
     {
         var _connection = new SqlConnection(_connectionString);
 
         using SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "SELECT name FROM jobs WHERE id = @Id";
+        sqlCommand.CommandText = "SELECT * FROM jobs WHERE id = @Id";
         sqlCommand.Parameters.AddWithValue("@Id", id);
 
         try
@@ -905,8 +1015,10 @@ public class Program
             {
                 while (reader.Read())
                 {
-                    //Console.WriteLine("ID: " + reader.GetInt32(0));
-                    Console.WriteLine("Name: " + reader.GetString(0));
+                    Console.WriteLine("ID: " + reader.GetString(0));
+                    Console.WriteLine("Title: " + reader.GetString(1));
+                    Console.WriteLine("Min Salary: " + reader.GetInt32(2));
+                    Console.WriteLine("Max Salary: " + reader.GetInt32(3));
                     Console.WriteLine();
                 }
             }
@@ -926,8 +1038,8 @@ public class Program
 
     public static void CariIdJob()
     {
-        Console.Write("Cari region Id: ");
-        int inputId = Int32.Parse(Console.ReadLine());
+        Console.Write("Cari Job Id: ");
+        string inputId = Console.ReadLine();
         GetByIdJob(inputId);
     }
 
@@ -985,7 +1097,7 @@ public class Program
 
 
 
-    //========================================================================
+    //==========================Histories==============================================
     // Get all histories
     public static void GetHistories()
     {
