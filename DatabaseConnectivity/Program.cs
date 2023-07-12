@@ -35,7 +35,6 @@ public class Program
                 Console.WriteLine("=== Menu Tabel Country ===");
                 MenuCoun();
                 string input2 = Console.ReadLine();
-                //Country.InsertCountry(input2, _connectionString);
                 break;
             case "3":
                 Console.WriteLine("=== Menu Tabel Location ===");
@@ -51,7 +50,9 @@ public class Program
                 break;
             case "5":
                 Console.WriteLine("=== Menu Tabel Employee ===");
-                //MenuCrud();
+                //MenuEmp();
+                //Console.Write("Input : ");
+                //string input5 = Console.ReadLine();
                 break;
             case "6":
                 Console.WriteLine("=== Menu Tabel Job ===");
@@ -61,7 +62,9 @@ public class Program
                 break;
             case "7":
                 Console.WriteLine("=== Menu Tabel History ===");
-                //MenuCrud();
+                MenuHis();
+                Console.Write("Input : ");
+                string input7 = Console.ReadLine();
                 break;
             case "8":
                 Console.WriteLine("Keluar dari program");
@@ -683,7 +686,7 @@ public class Program
                     break;
                 case 4:
                     Console.Clear();
-                    CariIdCoun();
+                    CariIdLoc();
                     MenuLoc();
                     break;
                 case 5:
@@ -699,6 +702,55 @@ public class Program
                     break;
             }
         }
+    }
+
+    public static void GetByIdLoc(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT l.id,street_address,postal_code,city,state_province, c.name " +
+            "FROM locations l join countries c on l.country_id = c.id WHERE l.id = @Id";
+        sqlCommand.Parameters.AddWithValue("@Id", id);
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id          : " + reader.GetInt32(0));
+                    Console.WriteLine("Street      : " + reader.GetString(1));
+                    Console.WriteLine("Postal Code : " + reader.GetString(2));
+                    Console.WriteLine("City        : " + reader.GetString(3));
+                    Console.WriteLine("State       : " + reader.GetString(4));
+                    Console.WriteLine("Country     : " + reader.GetString(5));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No locations found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+    public static void CariIdLoc()
+    {
+        Console.Write("Cari Id Location: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        GetByIdLoc(inputId);
     }
     public static void DeleteLoc(int id)
     {
@@ -1618,6 +1670,60 @@ public class Program
 
 
     //==========================Histories==============================================
+    public static void MenuHis()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            Console.WriteLine("1. Create");
+            Console.WriteLine("2. Update");
+            Console.WriteLine("3. Delete");
+            Console.WriteLine("4. Get By Id");
+            Console.WriteLine("5. Get All");
+            Console.WriteLine("6. Back");
+            Console.WriteLine();
+            Console.Write("Masukkan Pilihan : ");
+            int pilihMenu = Int32.Parse(Console.ReadLine());
+
+            switch (pilihMenu)
+            {
+                case 1:
+                    Console.Clear();
+                    TambahHis();
+                    MenuHis();
+                    break;
+                case 2:
+                    Console.Clear();
+                    UbahLoc();
+                    MenuLoc();
+                    break;
+                case 3:
+                    Console.Clear();
+                    HapusLoc();
+                    MenuLoc();
+                    break;
+                case 4:
+                    Console.Clear();
+                    CariIdLoc();
+                    MenuLoc();
+                    break;
+                case 5:
+                    GetHistories();
+                    MenuHis();
+                    break;
+                case 6:
+                    MenuUtama();
+                    break;
+                default:
+                    Console.WriteLine("Tidak ada pilihan");
+                    MenuLoc();
+                    break;
+            }
+        }
+    }
+
+
+
     // Get all histories
     public static void GetHistories()
     {
@@ -1636,8 +1742,11 @@ public class Program
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine("Id: " + reader.GetInt32(0));
-                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Start Date     : " + reader.GetDateTime(0));
+                    Console.WriteLine("Employee ID    : " + reader.GetInt32(1));
+                    Console.WriteLine("End Date       : " + reader.GetDateTime(2));
+                    Console.WriteLine("Departement ID : " + reader.GetInt32(3));
+                    Console.WriteLine("Job ID         : " + reader.GetString(4));
                     Console.WriteLine();
                 }
             }
@@ -1654,6 +1763,88 @@ public class Program
             Console.WriteLine("Error connecting to database.");
         }
     }
+
+    public static void InsertHist(DateTime start_date, int employee_id, DateTime end_date, 
+        int departement_id, string job_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlConnection connection = new SqlConnection(_connectionString);
+            string query = "INSERT INTO histories (start_date, employee_id, end_date, departement_id, job_id) " +
+                           "VALUES (@StartDate, @EmployeeID, @EndDate, @DepartmentID, @JobID)";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@StartDate", start_date);
+                command.Parameters.AddWithValue("@EmployeeID", employee_id);
+                command.Parameters.AddWithValue("@EndDate", end_date);
+                command.Parameters.AddWithValue("@DepartmentID", departement_id);
+                command.Parameters.AddWithValue("@JobID", job_id);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("History record inserted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to insert history record.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            
+        }
+    }
+    public static void TambahHis()
+    {
+        Console.Write("Input Start Date (YYYY-MM-DD): ");
+        string inStart = Console.ReadLine();
+        DateTime startDate;
+        if (DateTime.TryParse(inStart, out startDate))
+        {
+            // Valid DateTime value
+            Console.WriteLine("Start Date: " + startDate.ToString("yyyy-MM-dd"));
+        }
+        else
+        {
+            // Invalid DateTime value
+            Console.WriteLine("Invalid Start Date format. Please enter a valid date (YYYY-MM-DD).");
+            return; // Exit the method if the date is invalid
+        }
+
+        Console.Write("Input Employee ID: ");
+        int inEmpID = Int32.Parse(Console.ReadLine());
+
+        Console.Write("Input End Date (YYYY-MM-DD): ");
+        string inEnd = Console.ReadLine();
+        DateTime endDate;
+        if (DateTime.TryParse(inEnd, out endDate))
+        {
+            // Valid DateTime value
+            Console.WriteLine("End Date: " + endDate.ToString("yyyy-MM-dd"));
+        }
+        else
+        {
+            // Invalid DateTime value
+            Console.WriteLine("Invalid End Date format. Please enter a valid date (YYYY-MM-DD).");
+            return; // Exit the method if the date is invalid
+        }
+
+        Console.Write("Input Departemen ID: ");
+        int inputDepID = Int32.Parse(Console.ReadLine());
+
+        Console.Write("Input Job ID: ");
+        string inJobID = Console.ReadLine();
+        InsertHist(startDate, inEmpID, endDate, inputDepID, inJobID);
+    }
+
+
 
 }
 
