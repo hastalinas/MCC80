@@ -35,10 +35,13 @@ public class Program
                 Console.WriteLine("=== Menu Tabel Country ===");
                 Menu.MenuCrud();
                 Console.Write("Input: ");
+                string input2 = Console.ReadLine();
+                //Country.InsertCountry(input2, _connectionString);
                 break;
             case "3":
                 Console.WriteLine("=== Menu Tabel Location ===");
                 Menu.MenuCrud();
+                //Location
                 break;
             case "4":
                 Console.WriteLine("=== Menu Tabel Departement ===");
@@ -183,11 +186,11 @@ public class Regions
             int result = sqlCommand.ExecuteNonQuery();
             if (result > 0)
             {
-                Console.WriteLine("insert succes");
+                Console.WriteLine("Insert succes");
             }
             else
             {
-                Console.WriteLine("insert failed");
+                Console.WriteLine("Insert failed");
             }
             transaction.Commit();
             _connection.Close();
@@ -408,26 +411,205 @@ public class Country
 
 public class Location
 {
+    // Get all locations
+    public static void GetLocation(string _connectionString)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM locations";
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No location found.");
+            }
+
+            reader.Close();
+            _connection.Close();
+        }
+        catch
+        {
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
 
 }
 
 public class Departemen
 {
+    // Get all departement
+    public static void GetDepartemen(string _connectionString)
+    {
+        var _connection = new SqlConnection(_connectionString);
 
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM departements";
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No departement found.");
+            }
+
+            reader.Close();
+            _connection.Close();
+        }
+        catch
+        {
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
 }
 
 public class Employee
 {
+    // Get all employee
+    public static void GetEmployee(string _connectionString)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM employees";
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No employees found.");
+            }
+
+            reader.Close();
+            _connection.Close();
+        }
+        catch
+        {
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
 
 }
 
 public class Job
 {
+    // Get all countries
+    public static void GetJob(string _connectionString)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM jobs";
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No jobs found.");
+            }
+
+            reader.Close();
+            _connection.Close();
+        }
+        catch
+        {
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
 
 }
 
 public class History
 {
+    // Get all histories
+    public static void GetHistories(string _connectionString)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM histories";
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No histories found.");
+            }
+
+            reader.Close();
+            _connection.Close();
+        }
+        catch
+        {
+            Console.WriteLine("Error connecting to database.");
+        }
+    }
 
 }
 
