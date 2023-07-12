@@ -68,7 +68,7 @@ public class Program
                 break;
             case "8":
                 Console.WriteLine("Keluar dari program");
-                break;
+                return;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
                 break;
@@ -87,6 +87,7 @@ public class Program
         Console.WriteLine("5. Employee");
         Console.WriteLine("6. Job");
         Console.WriteLine("7. History");
+        Console.WriteLine("8. Keluar");
         Console.WriteLine("===============================");
     }
 
@@ -131,11 +132,13 @@ public class Program
                     MenuReg();
                     break;
                 case 5:
+                    Console.Clear();
                     GetRegions();
                     MenuReg();
                     break;
                 case 6:
-                    exit = true;
+                    Console.Clear();
+                    exit=true;
                     break;
                 default:
                     Console.WriteLine("Tidak ada pilihan");
@@ -143,6 +146,7 @@ public class Program
                     break;
             }
         }
+        MenuUtama();
     }
 
     public static void GetRegions()
@@ -1322,17 +1326,17 @@ public class Program
                 break;
             case 2:
                 Console.Clear();
-                UbahJob();
+                UbahEmp();
                 MenuEmp();
                 break;
             case 3:
                 Console.Clear();
-                HapusJob();
+                HapusEmp();
                 MenuEmp();
                 break;
             case 4:
                 Console.Clear();
-                CariIdJob();
+                CariIdEmp();
                 MenuEmp();
                 break;
             case 5:
@@ -1376,7 +1380,7 @@ public class Program
                     }
                     else
                     {
-                        Console.WriteLine("Last Name     : NULL");
+                        Console.WriteLine("Last Name   : NULL");
                     }
                     Console.WriteLine("Email       : " + reader.GetString(3));
                     Console.WriteLine("Phone       : " + reader.GetString(4));
@@ -1438,45 +1442,37 @@ public class Program
     }
 
 
-    public static void InsertEmpl(string id, string title, int min_salary, int max_salary)
+    public static void InsertEmpl(int id, string first_name, string last_name, string email, string phone_number, 
+        DateTime hire_date, int salary, decimal commision_pct, int manager_id, string job_id, int departement_id)
+
     {
         var _connection = new SqlConnection(_connectionString);
 
         SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "INSERT INTO jobs(id, title, min_salary, max_salary) " +
-            "VALUES (@id, @title, @min_salary, @max_salary)";
+        sqlCommand.CommandText = "INSERT INTO employees(id, first_name, last_name, email, phone_number, hire_date, salary, " +
+            "comission_pct, manager_id, job_id, departement_id)" +
+            "VALUES (@id, @first_name, @last_name, @email, @phone_number, @hire_date, @salary, @commision_pct, @manager_id, " +
+            "@job_id, @departement_id)";
 
         _connection.Open();
         SqlTransaction transaction = _connection.BeginTransaction();
         sqlCommand.Transaction = transaction;
 
+        sqlCommand.Parameters.AddWithValue("@id", id);
+        sqlCommand.Parameters.AddWithValue("@first_name", first_name);
+        sqlCommand.Parameters.AddWithValue("@last_name", last_name);
+        sqlCommand.Parameters.AddWithValue("@email", email);
+        sqlCommand.Parameters.AddWithValue("@phone_number", phone_number);
+        sqlCommand.Parameters.AddWithValue("@hire_date", hire_date);
+        sqlCommand.Parameters.AddWithValue("@salary", salary);
+        sqlCommand.Parameters.AddWithValue("@commision_pct", commision_pct);
+        sqlCommand.Parameters.AddWithValue("@manager_id", manager_id);
+        sqlCommand.Parameters.AddWithValue("@job_id", job_id);
+        sqlCommand.Parameters.AddWithValue("@departement_id", departement_id);
+
         try
         {
-            SqlParameter pId = new SqlParameter();
-            pId.ParameterName = "@id";
-            pId.SqlDbType = SqlDbType.VarChar;
-            pId.Value = id;
-            sqlCommand.Parameters.Add(pId);
-
-            SqlParameter pTitle = new SqlParameter();
-            pTitle.ParameterName = "@title";
-            pTitle.SqlDbType = SqlDbType.VarChar;
-            pTitle.Value = title;
-            sqlCommand.Parameters.Add(pTitle);
-
-            SqlParameter pMinSalary = new SqlParameter();
-            pMinSalary.ParameterName = "@min_salary";
-            pMinSalary.SqlDbType = SqlDbType.Int;
-            pMinSalary.Value = min_salary;
-            sqlCommand.Parameters.Add(pMinSalary);
-
-            SqlParameter pMaxSalary = new SqlParameter();
-            pMaxSalary.ParameterName = "@max_salary";
-            pMaxSalary.SqlDbType = SqlDbType.VarChar;
-            pMaxSalary.Value = max_salary;
-            sqlCommand.Parameters.Add(pMaxSalary);
-
             int result = sqlCommand.ExecuteNonQuery();
             if (result > 0)
             {
@@ -1489,27 +1485,267 @@ public class Program
             transaction.Commit();
             _connection.Close();
         }
-        catch
+        catch (Exception ex)
         {
             transaction.Rollback();
-            Console.WriteLine("Error connecting to database");
+            Console.WriteLine("Error! "+ex.Message);
         }
     }
 
     public static void TambahEmp()
     {
         Console.Write("Tambah ID: ");
-        string inId = Console.ReadLine();
-        Console.Write("Tambah Title: ");
-        string inTitle = Console.ReadLine();
-        Console.Write("Tambah Min Salary: ");
-        int inMinSal = Int32.Parse(Console.ReadLine());
-        Console.Write("Tambah Max Salary: ");
-        int inMaxSal = Int32.Parse(Console.ReadLine());
-        InsertJob(inId, inTitle, inMinSal, inMaxSal);
+        int inId = Int32.Parse(Console.ReadLine());
+        Console.Write("Tambah First Name: ");
+        string inFirst_name = Console.ReadLine();
+        Console.Write("Tambah Last Name: ");
+        string inLast_name = Console.ReadLine();
+        Console.Write("Tambah Email: ");
+        string inEmail = Console.ReadLine();
+        Console.Write("Tambah Hire Date (YYYY-MM-DD): ");
+        string inHire_date = Console.ReadLine();
+        Console.Write("Tambah Salary: ");
+        int inSalary = Int32.Parse(Console.ReadLine());
+        Console.Write("Tambah Phone Number: ");
+        string inPhone_number = Console.ReadLine();
+        Console.Write("Tambah Commission: ");
+        decimal inCommission_pct = Decimal.Parse(Console.ReadLine());
+        Console.Write("Tambah Manager ID: ");
+        int inManager_id = Int32.Parse(Console.ReadLine());
+        Console.Write("Tambah Job ID: ");
+        string inJob_id = Console.ReadLine();
+        Console.Write("Tambah Department ID: ");
+        int inDepartment_id = Int32.Parse(Console.ReadLine());
+
+        DateTime hireDate;
+        if (DateTime.TryParse(inHire_date, out hireDate))
+        {
+            InsertEmpl(inId, inFirst_name, inLast_name, inEmail, inPhone_number, hireDate, inSalary,
+                inCommission_pct, inManager_id, inJob_id, inDepartment_id);
+        }
+        else
+        {
+            Console.WriteLine("Invalid Hire Date format. Please enter a valid date (YYYY-MM-DD).");
+        }
     }
 
+    public static void UpdateEmp(int id, string first_name, string last_name, string email, string phone_number,
+        DateTime hire_date, int salary, decimal comission_pct, int manager_id, string job_id, int departement_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
 
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Update employees set first_name=@first_name, last_name=@last_name, " +
+            "email=@email, phone_number=@phone_number, hire_date=@hire_date, salary=@salary," +
+            "comission_pct=@comission_pct, manager_id=@manager_id, job_id=@job_id, departement_id=@departement_id where id = @id";
+
+        //Set paramaeter value
+        sqlCommand.Parameters.AddWithValue("@id", id);
+        sqlCommand.Parameters.AddWithValue("@first_name", first_name);
+        sqlCommand.Parameters.AddWithValue("@last_name", last_name);
+        sqlCommand.Parameters.AddWithValue("@email", email);
+        sqlCommand.Parameters.AddWithValue("@phone_number", phone_number);
+        sqlCommand.Parameters.AddWithValue("@hire_date", hire_date);
+        sqlCommand.Parameters.AddWithValue("@salary", salary);
+        sqlCommand.Parameters.AddWithValue("@comission_pct", comission_pct);
+        sqlCommand.Parameters.AddWithValue("@manager_id", manager_id);
+        sqlCommand.Parameters.AddWithValue("@job_id", job_id);
+        sqlCommand.Parameters.AddWithValue("@departement_id", departement_id);
+
+        try
+        {
+            _connection.Open();
+            int rowAffected = sqlCommand.ExecuteNonQuery();
+            if (rowAffected > 0)
+            {
+                Console.WriteLine("Employee updated succesfully.");
+            }
+            else
+            {
+                Console.WriteLine("No employee found or no change made.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+    public static void UbahEmp()
+    {
+        Console.Write("Masukkan Id yang ingin diubah: ");
+        int inId = Int32.Parse(Console.ReadLine());
+        Console.Write("Ubah First Name: ");
+        string inFirst_name = Console.ReadLine();
+        Console.Write("Ubah Last Name: ");
+        string inLast_name = Console.ReadLine();
+        Console.Write("Ubah Email: ");
+        string inEmail = Console.ReadLine();
+        Console.Write("Ubah Hire Date (YYYY-MM-DD): ");
+        string inHire_date = Console.ReadLine();
+        Console.Write("Ubah Salary: ");
+        int inSalary = Int32.Parse(Console.ReadLine());
+        Console.Write("Ubah Phone Number: ");
+        string inPhone_number = Console.ReadLine();
+        Console.Write("Ubah Commission: ");
+        decimal inCommission_pct = Decimal.Parse(Console.ReadLine());
+        Console.Write("Ubah Manager ID: ");
+        int inManager_id = Int32.Parse(Console.ReadLine());
+        Console.Write("Ubah Job ID: ");
+        string inJob_id = Console.ReadLine();
+        Console.Write("Ubah Department ID: ");
+        int inDepartment_id = Int32.Parse(Console.ReadLine());
+
+        DateTime hireDate;
+        if (DateTime.TryParse(inHire_date, out hireDate))
+        {
+            UpdateEmp(inId, inFirst_name, inLast_name, inEmail, inPhone_number, hireDate, inSalary,
+                inCommission_pct, inManager_id, inJob_id, inDepartment_id);
+        }
+        else
+        {
+            Console.WriteLine("Invalid Hire Date format. Please enter a valid date (YYYY-MM-DD).");
+        }
+    }
+
+    public static void DeleteEmp(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Delete from employees where id = (@Id)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@Id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete succes");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error! " + ex.Message);
+        }
+    }
+
+    public static void HapusEmp()
+    {
+        Console.Write("Hapus Employee dengan ID: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        DeleteEmp(inputId);
+    }
+
+    public static void GetByIdEmp(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT * FROM employees WHERE id=@id";
+        sqlCommand.Parameters.AddWithValue("@id", id);
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id          : " + reader.GetInt32(0));
+                    Console.WriteLine("First Name  : " + reader.GetString(1));
+                    //Console.WriteLine("Last Name   : " + reader.GetString(2));
+                    if (!reader.IsDBNull(2))
+                    {
+                        Console.WriteLine("Last Name   : " + reader.GetString(2));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Last Name   : NULL");
+                    }
+                    Console.WriteLine("Email       : " + reader.GetString(3));
+                    Console.WriteLine("Phone       : " + reader.GetString(4));
+                    Console.WriteLine("Hire Date   : " + reader.GetDateTime(5));
+
+                    if (!reader.IsDBNull(6))
+                    {
+                        Console.WriteLine("Salary      : " + reader.GetInt32(6));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Salary      : NULL");
+                    }
+
+                    if (!reader.IsDBNull(7))
+                    {
+                        Console.WriteLine("Commision   : " + reader.GetDecimal(7));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Commision   : NULL");
+                    }
+
+                    if (!reader.IsDBNull(8))
+                    {
+                        Console.WriteLine("Manager Id  : " + reader.GetInt32(8));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Manager Id  : NULL");
+                    }
+
+                    Console.WriteLine("Job Id      : " + reader.GetString(9));
+
+                    if (!reader.IsDBNull(10))
+                    {
+                        Console.WriteLine("Departement : " + reader.GetInt32(10));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Departement : NULL");
+                    }
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No departements found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+    public static void CariIdEmp()
+    {
+        Console.Write("Cari Employee dengan ID: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        GetByIdEmp(inputId);
+    }
     //===========Jobs========================
     public static void MenuJob()
     {
