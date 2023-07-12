@@ -39,8 +39,9 @@ public class Program
                 break;
             case "3":
                 Console.WriteLine("=== Menu Tabel Location ===");
-                //MenuCrud();
-                //Location
+                MenuLoc();
+                Console.Write("Input : ");
+                string input3 = Console.ReadLine();
                 break;
             case "4":
                 Console.WriteLine("=== Menu Tabel Departement ===");
@@ -648,6 +649,249 @@ public class Program
 
 
     //============Location======================
+    public static void MenuLoc()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            Console.WriteLine("1. Create");
+            Console.WriteLine("2. Update");
+            Console.WriteLine("3. Delete");
+            Console.WriteLine("4. Get By Id");
+            Console.WriteLine("5. Get All");
+            Console.WriteLine("6. Back");
+            Console.WriteLine();
+            Console.Write("Masukkan Pilihan : ");
+            int pilihMenu = Int32.Parse(Console.ReadLine());
+
+            switch (pilihMenu)
+            {
+                case 1:
+                    Console.Clear();
+                    TambahLoc();
+                    MenuLoc();
+                    break;
+                case 2:
+                    Console.Clear();
+                    UbahLoc();
+                    MenuLoc();
+                    break;
+                case 3:
+                    Console.Clear();
+                    HapusLoc();
+                    MenuLoc();
+                    break;
+                case 4:
+                    Console.Clear();
+                    CariIdCoun();
+                    MenuLoc();
+                    break;
+                case 5:
+                    GetLocation();
+                    MenuLoc();
+                    break;
+                case 6:
+                    MenuUtama();
+                    break;
+                default:
+                    Console.WriteLine("Tidak ada pilihan");
+                    MenuLoc();
+                    break;
+            }
+        }
+    }
+    public static void DeleteLoc(int id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Delete from locations where id = @Id";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@Id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete succes");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error! " + ex.Message);
+        }
+    }
+
+    public static void HapusLoc()
+    {
+        Console.Write("Hapus Location Id: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+        DeleteLoc(inputId);
+    }
+    public static void UpdateLoc(int id, string street_address, string postal_code, string city, string state_province,
+        string country_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Update locations set street_address = @street_address, postal_code = @postal_code, city = @city," +
+            "state_province = @state_province, country_id=@country_id where id = @id";
+
+        //Set paramaeter value
+        sqlCommand.Parameters.AddWithValue("@id", id);
+        sqlCommand.Parameters.AddWithValue("@street_address", street_address);
+        sqlCommand.Parameters.AddWithValue("@postal_code", postal_code);
+        sqlCommand.Parameters.AddWithValue("@city", city);
+        sqlCommand.Parameters.AddWithValue("@state_province", state_province);
+        sqlCommand.Parameters.AddWithValue("@country_id", country_id);
+
+        try
+        {
+            _connection.Open();
+            int rowAffected = sqlCommand.ExecuteNonQuery();
+            if (rowAffected > 0)
+            {
+                Console.WriteLine("Locations updated succesfully.");
+            }
+            else
+            {
+                Console.WriteLine("No Locations found or no change made.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    public static void UbahLoc()
+    {
+        Console.Write("Masukkan ID yang ingin diganti: ");
+        int inputId = Int32.Parse(Console.ReadLine());
+
+        Console.Write("Update Street Address : ");
+        string instreet_address = Console.ReadLine();
+
+        Console.Write("Update Postal Code : ");
+        string inpostal_code = Console.ReadLine();
+
+        Console.Write("Update City : ");
+        string incity = Console.ReadLine();
+
+        Console.Write("Update State Province: ");
+        string instate_province = Console.ReadLine();
+
+        Console.Write("Update Contry Id: ");
+        string incountry_id = Console.ReadLine();
+
+        UpdateLoc(inputId, instreet_address, inpostal_code,incity, instate_province,incountry_id);
+    }
+
+    public static void InsertLoc(int id, string street_address, string postal_code, string city, string state_province,
+        string country_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "INSERT INTO locations (id, street_address, postal_code, city, state_province, country_id) " +
+            "VALUES (@id, @street_address, @postal_code, @city, @state_province, @country_id)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pSA = new SqlParameter();
+            pSA.ParameterName = "@street_address";
+            pSA.SqlDbType = SqlDbType.VarChar;
+            pSA.Value = street_address;
+            sqlCommand.Parameters.Add(pSA);
+
+            SqlParameter ppostal_code = new SqlParameter();
+            ppostal_code.ParameterName = "@postal_code";
+            ppostal_code.SqlDbType = SqlDbType.VarChar;
+            ppostal_code.Value = postal_code;
+            sqlCommand.Parameters.Add(ppostal_code);
+
+            SqlParameter pcity = new SqlParameter();
+            pcity.ParameterName = "@city";
+            pcity.SqlDbType = SqlDbType.VarChar;
+            pcity.Value =city;
+            sqlCommand.Parameters.Add(pcity);
+
+            SqlParameter pstate_province = new SqlParameter();
+            pstate_province.ParameterName = "@state_province";
+            pstate_province.SqlDbType = SqlDbType.VarChar;
+            pstate_province.Value = postal_code;
+            sqlCommand.Parameters.Add(pstate_province);
+
+            SqlParameter pcountry_id = new SqlParameter();
+            pcountry_id.ParameterName = "@country_id";
+            pcountry_id.SqlDbType = SqlDbType.Char;
+            pcountry_id.Value = country_id;
+            sqlCommand.Parameters.Add(pcountry_id);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Insert succes");
+            }
+            else
+            {
+                Console.WriteLine("Insert failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error!" + ex.Message);
+        }
+
+    }
+
+    public static void TambahLoc()
+    {
+        Console.Write("Input ID Location: ");
+        int inputID = Int32.Parse(Console.ReadLine());
+        Console.Write("Input Address: ");
+        string inputAddress = Console.ReadLine();
+        Console.Write("Input Postal Code: ");
+        string inputPos = Console.ReadLine();
+        Console.Write("Input City: ");
+        string inputCity = Console.ReadLine();
+        Console.Write("Input State Province: ");
+        string inputProv = Console.ReadLine();
+        Console.Write("Input Country ID: ");
+        string inputCoun = Console.ReadLine();
+        InsertLoc(inputID, inputAddress, inputPos, inputCity, inputProv, inputCoun);
+    }
     // Get all locations
     public static void GetLocation()
     {
@@ -655,7 +899,8 @@ public class Program
 
         using SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "SELECT * FROM locations";
+        sqlCommand.CommandText = "SELECT l.id,street_address,postal_code,city,state_province, c.name " +
+            "FROM locations l join countries c on l.country_id = c.id";
 
         try
         {
@@ -666,8 +911,12 @@ public class Program
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine("Id: " + reader.GetInt32(0));
-                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Id          : " + reader.GetInt32(0));
+                    Console.WriteLine("Street      : " + reader.GetString(1));
+                    Console.WriteLine("Postal Code : " + reader.GetString(2));
+                    Console.WriteLine("City        : " + reader.GetString(3));
+                    Console.WriteLine("State       : " + reader.GetString(4));
+                    Console.WriteLine("Country     : " + reader.GetString(5));
                     Console.WriteLine();
                 }
             }
@@ -684,6 +933,8 @@ public class Program
             Console.WriteLine("Error connecting to database.");
         }
     }
+
+
 
     //============Departement======================
     // Get all departement
@@ -711,17 +962,17 @@ public class Program
                     break;
                 case 2:
                     Console.Clear();
-                    UbahCoun();
+                    UbahDep();
                     MenuDep();
                     break;
                 case 3:
                     Console.Clear();
-                    HapusCount();
+                    HapusDep();
                     MenuDep();
                     break;
                 case 4:
                     Console.Clear();
-                    CariIdCoun();
+                    CariIdDep();
                     MenuDep();
                     break;
                 case 5:
@@ -780,7 +1031,7 @@ public class Program
     }
 
     // insert departemen
-    public static void InsertDep(string id, string name, int location_id, int manager_id)
+    public static void InsertDep(int id, string name, int location_id, int manager_id)
     {
         var _connection = new SqlConnection(_connectionString);
 
@@ -822,11 +1073,11 @@ public class Program
             int result = sqlCommand.ExecuteNonQuery();
             if (result > 0)
             {
-                Console.WriteLine("insert succes");
+                Console.WriteLine("Insert succes");
             }
             else
             {
-                Console.WriteLine("insert failed");
+                Console.WriteLine("Insert failed");
             }
             transaction.Commit();
             _connection.Close();
@@ -841,7 +1092,7 @@ public class Program
     public static void TambahDep()
     {
         Console.Write("Input ID Departemen: ");
-        string inputID = Console.ReadLine();
+        int inputID = Int32.Parse(Console.ReadLine());
         Console.Write("Input Departement Name: ");
         string inputDepName = Console.ReadLine();
         Console.Write("Input ID Location: ");
@@ -851,6 +1102,143 @@ public class Program
         InsertDep(inputID, inputDepName, inpuLocId, inputManID);
     }
 
+    public static void GetByIdDep(string id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        using SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "SELECT d.id, d.name, l.city, d.manager_id FROM departements d JOIN locations l ON d.location_id = l.id WHERE d.id=@id";
+        sqlCommand.Parameters.AddWithValue("@id", id);
+
+        try
+        {
+            _connection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine("Id: " + reader.GetInt32(0));
+                    Console.WriteLine("Departement Name: " + reader.GetString(1));
+                    Console.WriteLine("Location Name : " + reader.GetString(2));
+                    Console.WriteLine("Manager ID: " + reader.GetInt32(3));
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No departements found.");
+            }
+
+            reader.Close();
+            //_connection.Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error!" + ex.Message);
+        }
+    }
+
+    public static void CariIdDep()
+    {
+        Console.Write("Cari Id Departement: ");
+        string inputId = Console.ReadLine();
+        GetByIdDep(inputId);
+    }
+    public static void DeleteDep(string id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Delete from departements where id = @Id";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@Id";
+            pId.SqlDbType = SqlDbType.VarChar;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("Delete succes");
+            }
+            else
+            {
+                Console.WriteLine("Delete failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error! " + ex.Message);
+        }
+    }
+
+    public static void HapusDep()
+    {
+        Console.Write("Hapus Departemen Id: ");
+        string inputId = Console.ReadLine();
+        DeleteDep(inputId);
+    }
+
+    public static void UpdateDep(string id, string name, int location_id, int manager_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "Update departements set name = @name, location_id = @location_id, manager_id = @manager_id where id = @id";
+
+        //Set paramaeter value
+        sqlCommand.Parameters.AddWithValue("@id", id);
+        sqlCommand.Parameters.AddWithValue("@name", name);
+        sqlCommand.Parameters.AddWithValue("@location_id", location_id);
+        sqlCommand.Parameters.AddWithValue("@manager_id", manager_id);
+
+        try
+        {
+            _connection.Open();
+            int rowAffected = sqlCommand.ExecuteNonQuery();
+            if (rowAffected > 0)
+            {
+                Console.WriteLine("Departement updated succesfully.");
+            }
+            else
+            {
+                Console.WriteLine("No Departement found or no change made.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+    public static void UbahDep()
+    {
+        Console.Write("Masukkan ID yang ingin diganti: ");
+        string inputId = Console.ReadLine();
+        Console.Write("Ubah Departement Name: ");
+        string inputDep = Console.ReadLine();
+        Console.Write("Ubah Location ID: ");
+        int inputLocID = Int32.Parse(Console.ReadLine());
+        Console.Write("Ubah Manager ID: ");
+        int inputManID = Int32.Parse(Console.ReadLine());
+        UpdateDep(inputId, inputDep, inputLocID, inputManID);
+    }
+
+
+    //============employee==========
     // Get all employee
     public static void GetEmployee()
     {
