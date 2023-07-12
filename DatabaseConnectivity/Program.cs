@@ -89,6 +89,8 @@ public class Program
         Console.WriteLine("7. History");
         Console.WriteLine("8. Keluar");
         Console.WriteLine("===============================");
+        Console.Write("Masukkan Pilihan : ");
+        string choice = Console.ReadLine();
     }
 
 
@@ -405,11 +407,13 @@ public class Program
                     MenuCoun();
                     break;
                 case 5:
+                    Console.Clear();
                     GetCoun();
                     MenuCoun();
                     break;
                 case 6:
-                    MenuUtama();
+                    Console.Clear();
+                    exit = true;
                     break;
                 default:
                     Console.WriteLine("Tidak ada pilihan");
@@ -417,6 +421,7 @@ public class Program
                     break;
             }
         }
+        MenuUtama();
     }
     // Get all countries
     public static void GetCoun()
@@ -694,10 +699,12 @@ public class Program
                     MenuLoc();
                     break;
                 case 5:
+                    Console.Clear();
                     GetLocation();
                     MenuLoc();
                     break;
                 case 6:
+                    Console.Clear();
                     MenuUtama();
                     break;
                 default:
@@ -1038,10 +1045,12 @@ public class Program
                     MenuDep();
                     break;
                 case 5:
+                    Console.Clear();
                     GetDepartemen();
                     MenuDep();
                     break;
                 case 6:
+                    Console.Clear();
                     MenuUtama();
                     break;
                 default:
@@ -1340,6 +1349,7 @@ public class Program
                 MenuEmp();
                 break;
             case 5:
+                Console.Clear();
                 GetEmployee();
                 MenuEmp();
                 break;
@@ -1782,6 +1792,7 @@ public class Program
                 MenuJob();
                 break;
             case 5:
+                Console.Clear();
                 GetJob();
                 MenuJob();
                 break;
@@ -2126,10 +2137,12 @@ public class Program
                     MenuLoc();
                     break;
                 case 5:
+                    Console.Clear();
                     GetHistories();
                     MenuHis();
                     break;
                 case 6:
+                    Console.Clear();
                     MenuUtama();
                     break;
                 default:
