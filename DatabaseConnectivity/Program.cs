@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics.Metrics;
@@ -43,7 +44,9 @@ public class Program
                 break;
             case "4":
                 Console.WriteLine("=== Menu Tabel Departement ===");
-                //MenuCrud();
+                MenuDep();
+                Console.Write("Input : ");
+                string input4 = Console.ReadLine();
                 break;
             case "5":
                 Console.WriteLine("=== Menu Tabel Employee ===");
@@ -682,14 +685,69 @@ public class Program
         }
     }
 
+    //============Departement======================
     // Get all departement
+    public static void MenuDep()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            Console.WriteLine("1. Create");
+            Console.WriteLine("2. Update");
+            Console.WriteLine("3. Delete");
+            Console.WriteLine("4. Get By Id");
+            Console.WriteLine("5. Get All");
+            Console.WriteLine("6. Back");
+            Console.WriteLine();
+            Console.Write("Masukkan Pilihan : ");
+            int pilihMenu = Int32.Parse(Console.ReadLine());
+
+            switch (pilihMenu)
+            {
+                case 1:
+                    Console.Clear();
+                    TambahDep();
+                    MenuDep();
+                    break;
+                case 2:
+                    Console.Clear();
+                    UbahCoun();
+                    MenuDep();
+                    break;
+                case 3:
+                    Console.Clear();
+                    HapusCount();
+                    MenuDep();
+                    break;
+                case 4:
+                    Console.Clear();
+                    CariIdCoun();
+                    MenuDep();
+                    break;
+                case 5:
+                    GetDepartemen();
+                    MenuDep();
+                    break;
+                case 6:
+                    MenuUtama();
+                    break;
+                default:
+                    Console.WriteLine("Tidak ada pilihan");
+                    MenuDep();
+                    break;
+            }
+        }
+    }
+
+    // Get all dep
     public static void GetDepartemen()
     {
         var _connection = new SqlConnection(_connectionString);
 
         using SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = _connection;
-        sqlCommand.CommandText = "SELECT * FROM departements";
+        sqlCommand.CommandText = "SELECT d.id, d.name, l.city, d.manager_id " +
+            "FROM departements d JOIN locations l ON d.location_id = l.Id";
 
         try
         {
@@ -701,7 +759,9 @@ public class Program
                 while (reader.Read())
                 {
                     Console.WriteLine("Id: " + reader.GetInt32(0));
-                    Console.WriteLine("Name: " + reader.GetString(1));
+                    Console.WriteLine("Departement Name: " + reader.GetString(1));
+                    Console.WriteLine("Location Name : " + reader.GetString(2));
+                    Console.WriteLine("Manager ID: " + reader.GetInt32(3));
                     Console.WriteLine();
                 }
             }
@@ -717,6 +777,78 @@ public class Program
         {
             Console.WriteLine("Error connecting to database.");
         }
+    }
+
+    // insert departemen
+    public static void InsertDep(string id, string name, int location_id, int manager_id)
+    {
+        var _connection = new SqlConnection(_connectionString);
+
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlCommand.Connection = _connection;
+        sqlCommand.CommandText = "INSERT INTO departements (id, name, location_id, manager_id) " +
+            "VALUES (@id, @name, @location_id, @manager_id)";
+
+        _connection.Open();
+        SqlTransaction transaction = _connection.BeginTransaction();
+        sqlCommand.Transaction = transaction;
+
+        try
+        {
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = SqlDbType.Int;
+            pId.Value = id;
+            sqlCommand.Parameters.Add(pId);
+
+            SqlParameter pName = new SqlParameter();
+            pName.ParameterName = "@name";
+            pName.SqlDbType = SqlDbType.VarChar;
+            pName.Value = name;
+            sqlCommand.Parameters.Add(pName);
+
+            SqlParameter pLocId = new SqlParameter();
+            pLocId.ParameterName = "@location_id";
+            pLocId.SqlDbType = SqlDbType.Int;
+            pLocId.Value = location_id;
+            sqlCommand.Parameters.Add(pLocId);
+
+            SqlParameter pManId = new SqlParameter();
+            pManId.ParameterName = "@manager_id";
+            pManId.SqlDbType = SqlDbType.Int;
+            pManId.Value = manager_id;
+            sqlCommand.Parameters.Add(pManId);
+
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result > 0)
+            {
+                Console.WriteLine("insert succes");
+            }
+            else
+            {
+                Console.WriteLine("insert failed");
+            }
+            transaction.Commit();
+            _connection.Close();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            Console.WriteLine("Error!" + ex.Message);
+        }
+
+    }
+    public static void TambahDep()
+    {
+        Console.Write("Input ID Departemen: ");
+        string inputID = Console.ReadLine();
+        Console.Write("Input Departement Name: ");
+        string inputDepName = Console.ReadLine();
+        Console.Write("Input ID Location: ");
+        int inpuLocId = Int32.Parse(Console.ReadLine());
+        Console.Write("Input ID Manager: ");
+        int inputManID = Int32.Parse(Console.ReadLine());
+        InsertDep(inputID, inputDepName, inpuLocId, inputManID);
     }
 
     // Get all employee
