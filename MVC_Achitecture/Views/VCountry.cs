@@ -1,9 +1,4 @@
 ﻿using MVC_Achitecture.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVC_Achitecture.Views;
 
@@ -61,28 +56,38 @@ public class VCountry
 
     public Country InsertMenu()
     {
+        Console.WriteLine("Masukkan ID :");
+        string? inputId = Console.ReadLine();
         Console.WriteLine("Masukkan Nama :");
         string? inputName = Console.ReadLine();
+        Console.WriteLine("Masukkan Region ID :");
+        int? inputRegID = Convert.ToInt32(Console.ReadLine());
+
 
         return new Country
         {
-            //Id = inputId,
-            Name = inputName
+            Id = inputId,
+            Name = inputName,
+            RegionId = inputRegID.Value,
         };
     }
 
-    public Region UpdateMenu()
+    public Country UpdateMenu()
     {
         Console.Write("Id yang ingin diubah: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Nama: ");
-        string name = Console.ReadLine();
+        string inputId = Console.ReadLine();
+        Console.Write("Nama Country Baru   : ");
+        string inputName = Console.ReadLine();
+        Console.Write("Nama Country Baru   : ");
+        int regid = Convert.ToInt32(Console.ReadLine());
 
         return new Country
         {
-            Id = id,
-            Name = name
+            Id = inputId,
+            Name = inputName,
+            RegionId = regid
         };
+
     }
 
     public Country DeleteMenu()

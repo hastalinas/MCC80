@@ -1,9 +1,4 @@
 ﻿using MVC_Achitecture.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVC_Achitecture.Views;
 
@@ -74,7 +69,7 @@ public class VRegion
     {
         Console.Write("Id yang ingin diubah: ");
         int id = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Nama: ");
+        Console.Write("Nama Region Baru    : ");
         string name = Console.ReadLine();
 
         return new Region

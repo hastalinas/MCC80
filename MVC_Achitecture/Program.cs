@@ -88,6 +88,9 @@ public class Program
                     regionController.GetAll();
                     PressAnyKey();
                     break;
+                case 6:
+                    isTrue = false;
+                    break;
                 default:
                     InvalidInput();
                     break;
