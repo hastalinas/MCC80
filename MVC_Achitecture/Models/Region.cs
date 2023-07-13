@@ -159,7 +159,7 @@ public class Region
 
         SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = connection;
-        sqlCommand.CommandText = "SELECT * FROM regions WHERE region_id = @region_id";
+        sqlCommand.CommandText = "SELECT * FROM regions WHERE id = @region_id";
         sqlCommand.Parameters.AddWithValue("@region_id", id);
 
         try
@@ -184,6 +184,7 @@ public class Region
             return new Region();
         }
     }
+
 
 }
 

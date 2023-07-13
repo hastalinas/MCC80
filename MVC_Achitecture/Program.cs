@@ -42,6 +42,21 @@ public class Program
                     case 2:
                         MenuCoun();
                         break;
+                    case 3:
+                        MenuLoc();
+                        break;
+                    case 4:
+                        MenuDep();
+                        break;
+                    case 5:
+                        MenuEmp();
+                        break;
+                    case 6:
+                        MenuJob();
+                        break;
+                    case 7:
+                        MenuHist();
+                        break;
                     case 8:
                         ulang = false;
                         break;
@@ -175,6 +190,61 @@ public class Program
 
             }
         } while (isTrue);
+    }
+
+    private static void MenuDep()
+    {
+        Departemen departemen = new Departemen();
+        VDepartemen vDepartemen = new VDepartemen();
+        DepartementController departementController = new DepartementController(departemen, vDepartemen);
+        bool isTrue = true;
+        do
+        {
+            int pilihMenu = vDepartemen.Menu();
+            switch (pilihMenu)
+            {
+                case 1:
+                    departementController.Insert();
+                    PressAnyKey();
+                    break;
+                case 2:
+                    departementController.Update();
+                    PressAnyKey();
+                    break;
+                case 3:
+                    departementController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    departementController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    departementController.GetAll();
+                    PressAnyKey();
+                    break;
+                default:
+                    InvalidInput();
+                    break;
+
+            }
+        } while (isTrue);
+
+    }
+
+    private static void MenuEmp()
+    {
+
+    }
+
+    private static void MenuJob()
+    {
+
+    }
+
+    private static void MenuHist()
+    {
+
     }
 
     private static void InvalidInput()
