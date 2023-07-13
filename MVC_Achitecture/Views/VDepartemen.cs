@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,8 +20,10 @@ public class VDepartemen
 
     public void GetById(Departemen departemen)
     {
-        Console.WriteLine("Id Departemen  : " + departemen.Id);
+        Console.WriteLine("Id Departemen : " + departemen.Id);
         Console.WriteLine("Depatemen Name: " + departemen.Name);
+        Console.WriteLine("Location Name : " + departemen.Location_id);
+        Console.WriteLine("Manager ID    : " + departemen.Manager_id);
         Console.WriteLine("==========================");
 
     }
@@ -68,13 +71,21 @@ public class VDepartemen
 
     public Departemen InsertMenu()
     {
-        Console.Write("Masukan Nama: ");
-        string? inputName = Console.ReadLine();
+        Console.Write("Input ID Departemen: ");
+        int inputID = Int32.Parse(Console.ReadLine());
+        Console.Write("Input Departement Name: ");
+        string inputDepName = Console.ReadLine();
+        Console.Write("Input ID Location: ");
+        int inpuLocId = Int32.Parse(Console.ReadLine());
+        Console.Write("Input ID Manager: ");
+        int inputManID = Int32.Parse(Console.ReadLine());
 
         return new Departemen
         {
             Id = 0,
-            Name = inputName
+            Name = inputDepName,
+            Location_id = inpuLocId,
+            Manager_id = inputManID
         };
     }
 

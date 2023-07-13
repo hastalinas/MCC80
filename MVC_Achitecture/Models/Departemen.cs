@@ -62,7 +62,7 @@ public class Departemen
         var connection = Connection.Get();
         using SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = connection;
-        sqlCommand.CommandText = "INSERT INTO departements (id, name, location_id, manager_id) VALUES (@id, @name, @location_id, @manager_id";
+        sqlCommand.CommandText = "INSERT INTO departements (id, name, location_id, manager_id) VALUES (@id, @name, @location_id, @manager_id)";
 
         connection.Open();
         using SqlTransaction transaction = connection.BeginTransaction();
