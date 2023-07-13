@@ -39,6 +39,9 @@ public class Program
                     case 1:
                         MenuReg();
                         break;
+                    case 2:
+                        MenuCoun();
+                        break;
                     case 8:
                         ulang = false;
                         break;
@@ -58,9 +61,7 @@ public class Program
     {
         Region region = new Region();
         VRegion vRegion = new VRegion();
-
         RegionController regionController = new RegionController(region, vRegion);
-
         bool isTrue = true;
         do
         {
@@ -75,6 +76,18 @@ public class Program
                     regionController.Update();
                     PressAnyKey();
                     break;
+                case 3:
+                    regionController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    //regionController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    regionController.GetAll();
+                    PressAnyKey();
+                    break;
                 default:
                     InvalidInput();
                     break;
@@ -85,7 +98,41 @@ public class Program
 
     private static void MenuCoun()
     {
+        Country country = new Country();
+        VCountry vCountry = new VCountry();
+        CountryController countryController = new CountryController(country, vCountry);
+        bool isTrue = true;
+        do
+        {
+            int pilihMenu = vCountry.Menu();
+            switch (pilihMenu)
+            {
+                case 1:
+                    countryController.Insert();
+                    PressAnyKey();
+                    break;
+                case 2:
+                    countryController.Update();
+                    PressAnyKey();
+                    break;
+                case 3:
+                    countryController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    //countryController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    countryController.GetAll();
+                    PressAnyKey();
+                    break;
+                default:
+                    InvalidInput();
+                    break;
 
+            }
+        } while (isTrue);
     }
 
     private static void MenuLoc()

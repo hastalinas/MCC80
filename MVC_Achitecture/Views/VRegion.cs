@@ -60,7 +60,7 @@ public class VRegion
 
     public Region InsertMenu()
     {
-        Console.WriteLine("Masukan Nama: ");
+        Console.Write("Masukan Nama: ");
         string? inputName = Console.ReadLine();
 
         return new Region
@@ -72,15 +72,26 @@ public class VRegion
 
     public Region UpdateMenu()
     {
-        Console.WriteLine("Id yang ingin diubah: ");
+        Console.Write("Id yang ingin diubah: ");
         int id = Convert.ToInt32(Console.ReadLine());
-        Console.WriteLine("Nama: ");
+        Console.Write("Nama: ");
         string name = Console.ReadLine();
 
         return new Region
         {
             Id = id,
             Name = name
+        };
+    }
+
+    public Region DeleteMenu()
+    {
+        Console.WriteLine("Id region yang ingin dihapus: ");
+        int id = Convert.ToInt32(Console.ReadLine());
+
+        return new Region
+        {
+            Id = id
         };
     }
 

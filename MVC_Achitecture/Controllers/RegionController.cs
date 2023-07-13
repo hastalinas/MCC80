@@ -13,7 +13,7 @@ public class RegionController
         _regionView = regionView;
     }
 
-    public void GettAll()
+    public void GetAll()
     {
         var result = _regionModel.GetAll();
         if (result.Count is 0)
@@ -29,8 +29,6 @@ public class RegionController
     public void Insert()
     {
         var region = _regionView.InsertMenu();
-
-        //var result = _regionModel.
         var result = _regionModel.Insert(region);
         switch (result)
         {
@@ -67,7 +65,21 @@ public class RegionController
 
     public void Delete()
     {
+/*        var region = _regionView.DeleteMenu();
+        var result = _regionModel.Delete(region);
 
+        switch (result)
+        {
+            case -1:
+                _regionView.Error();
+                break;
+            case 0:
+                _regionView.Failure();
+                break;
+            default:
+                _regionView.Success();
+                break;
+        }*/
     }
 }
 
