@@ -81,7 +81,7 @@ public class Program
                     PressAnyKey();
                     break;
                 case 4:
-                    //regionController.GetById();
+                    regionController.GetById();
                     PressAnyKey();
                     break;
                 case 5:
@@ -140,7 +140,41 @@ public class Program
 
     private static void MenuLoc()
     {
+        Location location = new Location();
+        VLocation vLocation = new VLocation();
+        LocationController locationController = new LocationController(location, vLocation);
+        bool isTrue = true;
+        do
+        {
+            int pilihMenu = vLocation.Menu();
+            switch (pilihMenu)
+            {
+                case 1:
+                    locationController.Insert();
+                    PressAnyKey();
+                    break;
+                case 2:
+                    locationController.Update();
+                    PressAnyKey();
+                    break;
+                case 3:
+                    locationController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    //locationController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    locationController.GetAll();
+                    PressAnyKey();
+                    break;
+                default:
+                    InvalidInput();
+                    break;
 
+            }
+        } while (isTrue);
     }
 
     private static void InvalidInput()

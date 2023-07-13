@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Data;
 
 namespace MVC_Achitecture.Models;
 public class Region
@@ -60,7 +61,7 @@ public class Region
         {
             SqlParameter pName = new SqlParameter();
             pName.ParameterName = "@name";
-            pName.SqlDbType = System.Data.SqlDbType.VarChar;
+            pName.SqlDbType = SqlDbType.VarChar;
             pName.Value = region.Name;
             sqlCommand.Parameters.Add(pName);
 
@@ -123,7 +124,7 @@ public class Region
 
         SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = connection;
-        sqlCommand.CommandText = "DELETE FROM regions WHERE region_id = @region_id";
+        sqlCommand.CommandText = "DELETE FROM regions WHERE id = @region_id";
 
         connection.Open();
         SqlTransaction transaction = connection.BeginTransaction();
@@ -132,7 +133,7 @@ public class Region
         {
             SqlParameter pRegionId = new SqlParameter();
             pRegionId.ParameterName = "@region_id";
-            pRegionId.SqlDbType = System.Data.SqlDbType.Int;
+            pRegionId.SqlDbType = SqlDbType.Int;
             pRegionId.Value = id;
             sqlCommand.Parameters.Add(pRegionId);
 
@@ -150,7 +151,7 @@ public class Region
         }
     }
 
-    public Region GetById(int id)
+    public Region CariIdReg(int id)
     {
         var region = new Region();
 

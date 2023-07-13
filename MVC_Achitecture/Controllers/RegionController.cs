@@ -26,6 +26,21 @@ public class RegionController
         }
     }
 
+    public void GetById()
+    {
+        //var result = _regionView.GetById(regionId);
+        int id = _regionView.CariId();
+        var region = _regionModel.CariIdReg(id);
+        if (region == null)
+        {
+            _regionView.DataEmpty(); //DisplayRegion(region);
+        }
+        else
+        {
+            _regionView.GetById(region);// RegionNotFound();
+        }
+    }
+
     public void Insert()
     {
         var region = _regionView.InsertMenu();
@@ -65,7 +80,7 @@ public class RegionController
 
     public void Delete()
     {
-/*        var region = _regionView.DeleteMenu();
+        var region = _regionView.DeleteMenu();
         var result = _regionModel.Delete(region);
 
         switch (result)
@@ -79,7 +94,7 @@ public class RegionController
             default:
                 _regionView.Success();
                 break;
-        }*/
+        }
     }
 }
 

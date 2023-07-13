@@ -197,7 +197,7 @@ public class Country
 
         using SqlCommand sqlCommand = new SqlCommand();
         sqlCommand.Connection = connection;
-        sqlCommand.CommandText = "SELECT * FROM countries WHERE id = @Id";
+        sqlCommand.CommandText = "select * from countries where id = @Id";
         sqlCommand.Parameters.AddWithValue("@Id", id);
 
         try
@@ -210,6 +210,7 @@ public class Country
                 reader.Read();
                 country.Id = reader.GetString(0);
                 country.Name = reader.GetString(1);
+                country.RegionId = reader.GetInt32(2);
             }
 
             reader.Close();

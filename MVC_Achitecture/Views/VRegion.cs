@@ -13,9 +13,16 @@ public class VRegion
     }
     public void GetById(Region region)
     {
-        Console.WriteLine("Id: " + region.Id);
-        Console.WriteLine("Name: " + region.Name);
+        Console.WriteLine("Id Region  : " + region.Id);
+        Console.WriteLine("Region Name: " + region.Name);
         Console.WriteLine("==========================");
+    }
+
+    public int CariId()
+    {
+        Console.WriteLine("Masukkan ID Region");
+        int id = Convert.ToInt32(Console.ReadLine());
+        return id;
     }
 
     public void DataEmpty()
@@ -79,15 +86,13 @@ public class VRegion
         };
     }
 
-    public Region DeleteMenu()
+    public int DeleteMenu()
     {
-        Console.WriteLine("Id region yang ingin dihapus: ");
+        Console.Write("Id region yang ingin dihapus: ");
         int id = Convert.ToInt32(Console.ReadLine());
 
-        return new Region
-        {
-            Id = id
-        };
+        return id;
+
     }
 
 }

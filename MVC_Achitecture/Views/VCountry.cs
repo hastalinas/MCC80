@@ -14,9 +14,9 @@ public class VCountry
 
     public void GetById(Country country)
     {
-        Console.Write("Input ID Country: ");
-        Console.Write("Input Country   : ");
-        Console.Write("Input ID Region : ");
+        Console.Write("Input ID Country: " + country.Id);
+        Console.Write("Input Country   : " + country.Name);
+        Console.Write("Input ID Region : " + country.RegionId);
         Console.WriteLine("=============================");
     }
 

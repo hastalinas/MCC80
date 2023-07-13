@@ -916,7 +916,7 @@ public class Program
             SqlParameter pstate_province = new SqlParameter();
             pstate_province.ParameterName = "@state_province";
             pstate_province.SqlDbType = SqlDbType.VarChar;
-            pstate_province.Value = postal_code;
+            pstate_province.Value = state_province;
             sqlCommand.Parameters.Add(pstate_province);
 
             SqlParameter pcountry_id = new SqlParameter();

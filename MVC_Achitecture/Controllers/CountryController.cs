@@ -28,6 +28,11 @@ public class CountryController
         }
     }
 
+    public void GetId()
+    {
+
+    }
+
     public void Insert()
     {
         var country = _countryView.InsertMenu();
