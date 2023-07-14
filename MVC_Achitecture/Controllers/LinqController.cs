@@ -1,6 +1,7 @@
 ﻿using MVC_Achitecture.Models;
 using MVC_Achitecture.Views;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -117,28 +118,36 @@ public class LinqController
                                             }).ToList();*/
 
         var detailEmployeeByQuery = (from e in getEmployee
-                             join d in getDepartemen on e.DepID equals d.Id
-                             join l in getLocation on d.Location_id equals l.Id
-                             join c in getCountry on l.IdCountry equals c.Id
-                             join r in getRegion on c.RegionId equals r.Id
-                             select new
-                             {
-                                 Id = e.Id,
-                                 fullname = e.FN + " " + e.LN,
-                                 email = e.Email,
-                                 phone = e.Phone,
-                                 salary = e.Salary,
-                                 departement = d.Name,
-                                 address = l.StreetAdd,
-                                 country = c.Name,
-                                 region = r.Name
-                             }).ToList();
+                                      join d in getDepartemen on e.DepID equals d.Id
+                                      join l in getLocation on d.Location_id equals l.Id
+                                      join c in getCountry on l.IdCountry equals c.Name
+                                      join r in getRegion on c.RegionId equals r.Id
+                                      select new
+                                      {
+                                          Id = e.Id,
+                                          Fullname = e.FN + " " + e.LN,
+                                          Email = e.Email,
+                                          Phone = e.Phone,
+                                          Salary = e.Salary,
+                                          Departemen = d.Name,
+                                          Street = l.StreetAdd,
+                                          Country = c.Name,
+                                          Region = r.Name
+                                      }).ToList();
 
         foreach (var employee in detailEmployeeByQuery)
         {
-            Console.WriteLine($" Hello World{employee.Id} {employee.fullname} {employee.email} {employee.phone} {employee.salary}" +
-                $" {employee.departement} {employee.address} {employee.country} {employee.region}");
+            Console.WriteLine("ID         = " + employee.Id);
+            Console.WriteLine("Full name  = " + employee.Fullname);
+            Console.WriteLine("Email      = " + employee.Email);
+            Console.WriteLine("Phone      = " + employee.Phone);
+            Console.WriteLine("Salary     = " + employee.Salary);
+            Console.WriteLine("Departemen = " + employee.Departemen);
+            Console.WriteLine("Street     = " + employee.Street);
+            Console.WriteLine("Country    = " + employee.Country);
+            Console.WriteLine("Region     = " + employee.Region);
+            Console.WriteLine("=====================================================");
+
         }
-        Console.ReadLine();
     }
 }

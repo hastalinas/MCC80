@@ -63,7 +63,7 @@ public class Program
                         break;
                     case 8:
                         MenuLinq();
-                        Console.WriteLine("Memanggil linQ");
+                        //Console.WriteLine("Memanggil linQ");
                         break;
                     case 9:
                         ulang = false;
@@ -90,7 +90,7 @@ public class Program
         var linq = new LinqController(employee, departemen, country, location, region);
 
         linq.DetailEmployee();
-        linq.EmployeeByLastName();
+        //linq.EmployeeByLastName();
     }
 
     private static void MenuReg()
