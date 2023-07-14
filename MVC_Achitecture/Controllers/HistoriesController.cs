@@ -51,6 +51,7 @@ public class HistoriesController
     {
         var history = _historyView.InsertMenu();
         var result = _historyModel.Insert(history);
+
         switch (result)
         {
             case -1:

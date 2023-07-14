@@ -239,11 +239,82 @@ public class Program
 
     private static void MenuJob()
     {
+        Job job = new Job();
+        VJob vJob = new VJob();
+        JobController jobController = new JobController(job, vJob);
+        bool isTrue = true;
+        do
+        {
+            int pilihMenu = vJob.Menu();
+            switch (pilihMenu)
+            {
+                case 1:
+                    jobController.Insert();
+                    PressAnyKey();
+                    break;
+                case 2:
+                    jobController.Update();
+                    PressAnyKey();
+                    break;
+                case 3:
+                    jobController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    jobController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    jobController.GetAll();
+                    PressAnyKey();
+                    break;
+                default:
+                    InvalidInput();
+                    break;
+
+            }
+        } while (isTrue);
 
     }
 
     private static void MenuHist()
     {
+        History history = new History();
+        VHistory vHistory = new VHistory();
+        HistoriesController historiController = new HistoriesController(history, vHistory);
+        bool isTrue = true;
+        do
+        {
+            int pilihMenu = vHistory.Menu();
+            switch (pilihMenu)
+            {
+                case 1:
+                    //HistoriesController
+                    historiController.Insert();
+                    PressAnyKey();
+                    break;
+                case 2:
+                    historiController.Update();
+                    PressAnyKey();
+                    break;
+                case 3:
+                    historiController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    historiController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    historiController.GetAll();
+                    PressAnyKey();
+                    break;
+                default:
+                    InvalidInput();
+                    break;
+
+            }
+        } while (isTrue);
 
     }
 

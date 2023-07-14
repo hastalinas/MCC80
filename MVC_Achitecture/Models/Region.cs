@@ -177,7 +177,7 @@ public class Region
             reader.Close();
             connection.Close();
 
-            return new Region();
+            return  region;
         }
         catch
         {
