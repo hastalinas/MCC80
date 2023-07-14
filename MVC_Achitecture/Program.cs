@@ -234,6 +234,41 @@ public class Program
 
     private static void MenuEmp()
     {
+        Employee employee = new Employee();
+        VEmployee vEmployee = new VEmployee();
+        EmployeeController employeeController = new EmployeeController(employee, vEmployee);
+        bool isTrue = true;
+        do
+        {
+            int pilihMenu = vEmployee.Menu();
+            switch (pilihMenu)
+            {
+                case 1:
+                    employeeController.Insert();
+                    PressAnyKey();
+                    break;
+                case 2:
+                    employeeController.Update();
+                    PressAnyKey();
+                    break;
+                case 3:
+                    employeeController.Delete();
+                    PressAnyKey();
+                    break;
+                case 4:
+                    employeeController.GetById();
+                    PressAnyKey();
+                    break;
+                case 5:
+                    employeeController.GetAll();
+                    PressAnyKey();
+                    break;
+                default:
+                    InvalidInput();
+                    break;
+
+            }
+        } while (isTrue);
 
     }
 
@@ -289,7 +324,6 @@ public class Program
             switch (pilihMenu)
             {
                 case 1:
-                    //HistoriesController
                     historiController.Insert();
                     PressAnyKey();
                     break;

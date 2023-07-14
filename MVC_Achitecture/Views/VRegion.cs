@@ -63,7 +63,7 @@ public class VRegion
     public Region InsertMenu()
     {
         Console.Write("Masukan Nama: ");
-        string? inputName = Console.ReadLine();
+        string inputName = Console.ReadLine();
 
         return new Region
         {

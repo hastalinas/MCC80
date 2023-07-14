@@ -18,7 +18,7 @@ public class VJob
     }
     public void GetById(Job job)
     {
-        Console.WriteLine("Id Job  : " + job.Id);
+        Console.WriteLine("Id Job (Kode Huruf): " + job.Id);
         Console.WriteLine("Job Name: " + job.Title);
         Console.WriteLine("Min Salary : "+ job.MinSal);
         Console.WriteLine("Max Salary : " + job.MaxSal);
@@ -27,7 +27,7 @@ public class VJob
 
     public string CariId()
     {
-        Console.WriteLine("Masukkan ID Job");
+        Console.WriteLine("Masukkan ID Job (Kode Huruf)");
         string id = Console.ReadLine();
         return id;
     }
