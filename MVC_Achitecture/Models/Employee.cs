@@ -43,29 +43,30 @@ public class Employee
                 while (reader.Read())
                 {
                     Employee employee = new Employee();
-/*                    employee.Id = reader.GetInt32(0);
+                    /*                    employee.Id = reader.GetInt32(0);
+                                        employee.FN = reader.GetString(1);
+                                        employee.LN = reader.GetString(2);
+                                        employee.Email = reader.GetString(3);
+                                        employee.Phone = reader.GetString(4);
+                                        employee.Hire = reader.GetDateTime(5);
+                                        employee.Salary = reader.GetInt32(6);
+                                        employee.Com = reader.GetInt32(7);
+                                        employee.ManID = reader.GetInt32(8);
+                                        employee.JobID = reader.GetString(9);
+                                        employee.DepID = reader.GetInt32(10);*/
+
+                    employee.Id = reader.GetInt32(0);
                     employee.FN = reader.GetString(1);
-                    employee.LN = reader.GetString(2);
+                    employee.LN = (reader.IsDBNull(2) ? "" : reader.GetString(2));
                     employee.Email = reader.GetString(3);
-                    employee.Phone = reader.GetString(4);
+                    employee.Phone = (reader.IsDBNull(4) ? "" : reader.GetString(4));
                     employee.Hire = reader.GetDateTime(5);
                     employee.Salary = reader.GetInt32(6);
-                    employee.Com = reader.GetInt32(7);
-                    employee.ManID = reader.GetInt32(8);
-                    employee.JobID = reader.GetString(9);
-                    employee.DepID = reader.GetInt32(10);*/
-                 
-                    Console.WriteLine("Id          : " + reader.GetInt32(0));
-                    Console.WriteLine("First Name  : " + reader.GetString(1));
-                    Console.WriteLine("Last Name   : " + (reader.IsDBNull(2) ? "" : reader.GetString(2)));
-                    Console.WriteLine("Email       : " + reader.GetString(3));
-                    Console.WriteLine("Phone       : " + reader.GetString(4));
-                    Console.WriteLine("Hire Date   : " + reader.GetDateTime(5));
-                    Console.WriteLine("Salary      : " + reader.GetInt32(6));
-                    Console.WriteLine("Commision   : " + reader.GetDecimal(7));
-                    Console.WriteLine("Manager Id  : " + reader.GetInt32(8));
-                    Console.WriteLine("Job Id      : " + reader.GetString(9));
-                    Console.WriteLine("Departement ID : " + reader.GetInt32(10));
+                    employee.Com = reader.GetDecimal(7);
+                    employee.ManID = (reader.IsDBNull(8) ? 0 : reader.GetInt32(8));
+                    employee.JobID = (reader.IsDBNull(9) ? "" : reader.GetString(9));
+                    employee.DepID = (reader.IsDBNull(10) ? 0 : reader.GetInt32(10));
+
                     Console.WriteLine();
                     employees.Add(employee);
                 }

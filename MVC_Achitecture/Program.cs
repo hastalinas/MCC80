@@ -11,6 +11,9 @@ public class Program
     {
         MenuUtama();
     }
+
+    //LINQ
+
     public static void MenuUtama()
     {
         bool ulang = true;
@@ -25,7 +28,8 @@ public class Program
             Console.WriteLine("5. Employee");
             Console.WriteLine("6. Job");
             Console.WriteLine("7. History");
-            Console.WriteLine("8. Keluar");
+            Console.WriteLine("8. Linq");
+            Console.WriteLine("9. Keluar");
             Console.WriteLine("===============================");
             Console.Write("Masukkan Pilihan : ");
             //string choice = Console.ReadLine();
@@ -58,6 +62,10 @@ public class Program
                         MenuHist();
                         break;
                     case 8:
+                        MenuLinq();
+                        Console.WriteLine("Memanggil linQ");
+                        break;
+                    case 9:
                         ulang = false;
                         break;
                     default:
@@ -70,6 +78,19 @@ public class Program
                 Console.WriteLine("Input salah!");
             }
         } while (ulang);
+    }
+
+    public static void MenuLinq()
+    {
+        var employee = new Employee();
+        var region = new Region();
+        var country = new Country();
+        var location = new Location();
+        var departemen = new Departemen();
+        var linq = new LinqController(employee, departemen, country, location, region);
+
+        linq.DetailEmployee();
+        linq.EmployeeByLastName();
     }
 
     private static void MenuReg()
